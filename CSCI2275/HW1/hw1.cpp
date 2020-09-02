@@ -1,3 +1,5 @@
+/* Andrew Brown / 9/1/2020 / HW1 / CSCI 2275 / Dr. Rhonda Hoenigman */
+
 #include <iostream>
 
 void lockers(){
@@ -46,6 +48,7 @@ void lockers(){
     std::cout<<"and "<<openedLockers[count-1]<<"."<<std::endl;
 }
 
+// Define person struct
 struct person {
         int height;
         int weight;
@@ -55,31 +58,49 @@ person circusTower[6] = {{65, 100}, {70, 150}, {56, 90}, {75, 190}, {60, 95}, {6
 void tower (person people[6]){
     int tallest = 0;
     int heaviest = 0;
+    int tempTallest = 0;
+    int tempHeaviest = 0;
     int index = 0;
     int count = 0;
-    for (int j = 0 ; j < 6 ; j++){ // Increase starting index of for loop i
-        for (int i = j ; i < 6 ; i++){ // Find the largest person above index j
-            if (people[i].height > tallest && people[i].weight > heaviest){
-                tallest = people[i].height; // Save tallest person.
-                heaviest = people[i].weight; // Save heaviest person.
-                int index = i; // Save largest person index.
+    for (int j = 0 ; j < 6 ; j++){                                                      // Increase starting index of for loop i
+        for (int i = j ; i < 6 ; i++){                                                  // Find the largest person above index j
+            if ( j == 0){                                                               // If it is the first time through the loop ...
+                if (people[i].height > tempTallest && people[i].weight > tempHeaviest){ // And if the curent person is taller and heavier than the previous person
+                    tempTallest = people[i].height;                                     // Save tallest person.
+                    tempHeaviest = people[i].weight;                                    // Save heaviest person.
+                    index = i;                                                          // Save largest person index.
+                }
+            } else if (people[i].height < tallest && people[i].weight < heaviest){      // If the current person is lighter and shorter than the previous person...
+                if (people[i].height > tempTallest && people[i].weight > tempHeaviest){ // And the current person is heavier and taller than the rest of the people in the list
+                    tempTallest = people[i].height;                                     // Save tallest person.
+                    tempHeaviest = people[i].weight;                                    // Save heaviest person.
+                    index = i;                                                          // Save largest person index.
+                }
             }
         }
+        tallest = tempTallest;                      // Save the temporary values.
+        heaviest = tempHeaviest;                    // Save the temporary values.
+
         // Swap largest person with first index in array.
         people[index].height = people[j].height;
         people[index].weight = people[j].weight;
         people[j].height = tallest;
         people[j].weight = heaviest;
-        count++;
+        
+        // If the person has not been terminated from the tower (aka skinny and tall or fat and short) increase the person count.
+        if(tallest != 0 && heaviest != 0){count++; } 
+
+        // Reset temporary values
+        tempTallest = 0;
+        tempHeaviest = 0;
     }
-    std::cout<<"Maximum number of people: "<<count<<"."<<std::endl;
-    for (int i = 0 ; i < count ; i++) {
+
+    // Format and print Max number of people and the people in the right order.
+    std::cout<<"Maximum number of people: "<<count<<std::endl;
+    for (int i = count-1 ; i >= 0 ; i--) {
         std::cout<<"Person "<<i+1<<" -- "<<"Height: "<<people[i].height<< " Weight: "<<people[i].weight<<std::endl;
     }
-
 }
-
-
 
 int main(){
 
@@ -92,28 +113,6 @@ int main(){
                 */
     
     
-    
     tower(circusTower);
-
-    //people[0].height = 65;
-    //people[0].weight = 100;
-    //people[1].height = 70;
-    //people[1].weight = 150;
-    //people[2].height = 56;
-    //people[2].weight = 90;
-    //people[3].height = 75;
-    //people[3].weight = 190;
-    //people[4].height = 60;
-    //people[4].weight = 95;
-    //people[5].height = 68;
-    //people[5].weight = 110;
-
-
-
-    
-
-            
-    
-
     return 0;
 }
