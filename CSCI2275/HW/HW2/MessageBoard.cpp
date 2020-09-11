@@ -34,7 +34,7 @@ void MessageBoard::readFile(string filename)
             if(tfor_sale == "wanted") {  // If item is wanted, then status is 1.
                 temp.for_sale = 1;       // Store status as 1.
             } else {                     // If item is for sale, then status is 0.
-                items.for_sale = 0;      // Store status as 0.
+                temp.for_sale = 0;      // Store status as 0.
             }
 
             MessageBoard::checkForMatch(temp);
@@ -58,8 +58,8 @@ void MessageBoard::checkForMatch(item it){
                                                    /* And if the person who wants the item is willing to pay equal to or more than
                                                     * the asked price, OR the person who is selling the item is willing to sell equal
                                                     * to or less than the buyer is willing to pay... */
-                if((it.for_sale == 'wanted' && it.price >= items[i].price) || (it.for_sale == 'for sale' && it.price <= items[i].price)){
-                    items.erase(i);                // Then erase the item from the vector.
+                if((it.for_sale == 1 && it.price >= items[i].price) || (it.for_sale == 0 && it.price <= items[i].price)){
+                    items.erase(items.begin()+i);                // Then erase the item from the vector.
                     addItemIndicator = 1;          // Indicate not to add the current item to the vector.
                     break;                         // Break out of the for loop so we only match with one person.
                 }
@@ -68,9 +68,7 @@ void MessageBoard::checkForMatch(item it){
     }
 
     if(addItemIndicator == 0) {                 // If we could not find a match ...
-        items.type.push_back(temp.type);        // Store type in vector of structs.
-        items.price.push_back(temp.price);      // Store price in vector of structs.
-        items.for_sale.pushback(temp.for_sale); // Store sale status in vector of structs. 
+        items.push_back(it);
     }
 }
 
