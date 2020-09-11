@@ -1,3 +1,5 @@
+/* Andrew Brown / 9/10/2020 / HW2 / CSCI 2275 / Dr. Rhonda Hoenigman */
+
 #include<sstream>
 #include"MessageBoard.h"
 #include <iostream>
