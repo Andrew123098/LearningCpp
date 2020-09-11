@@ -20,6 +20,9 @@ int main(int argc, char *argv[])
     // TO DO
     // Get input from the user for the filename and process all items here
     // After file processed, print menu and wait for user input
+    
+    mb.readFile(filename);
+    mb.printItemsRemaining();
 	
 	std::string dmenu = "======Main Menu=====\n"
 					"1. Post item for sale\n"
@@ -43,6 +46,15 @@ int main(int argc, char *argv[])
             {
 				//get info for item for sale
                 //call mb.PostItemToMessageBoard
+                string name;
+                int price;
+                cout<<"Enter Item: ";
+                cin>>name;
+                cout<<endl;
+                cout<<"Enter Price as Integer: ";
+                cin>>price;
+                cout<<endl;
+                mb.postItemToMessageBoard(name, price, 0);
                 break;
             }
             
@@ -50,11 +62,21 @@ int main(int argc, char *argv[])
             {
 				//get info for item wanted
                 //call mb.PostItemToMessageBoard
+                 string name;
+                int price;
+                cout<<"Enter Item: ";
+                cin>>name;
+                cout<<endl;
+                cout<<"Enter Price as Integer: ";
+                cin>>price;
+                cout<<endl;
+                mb.postItemToMessageBoard(name, price, 1);
                 break;
             }
             case 3:
             {
                 //print items in message board
+                mb.printItemsRemaining();
                 break;
             }
                 
