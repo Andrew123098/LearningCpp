@@ -17,8 +17,8 @@ using namespace std;
 // Main function run
 int main(int argc, char *argv[])
 {
-	MessageBoard mb;
-	string filename = argv[1];
+	MessageBoard mb;               // C1
+	string filename = argv[1];     // C2
     // TO DO
     // Get input from the user for the filename and process all items here
     // After file processed, print menu and wait for user input
