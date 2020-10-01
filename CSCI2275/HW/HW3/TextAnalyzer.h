@@ -52,16 +52,17 @@ class TextAnalyzer{
         void insertAt(std::string word, int index){ //call in the insert method to add a word at specified index and shift rest of array
             // Double array size if need be.
             if(numUniqueWords >= arrCapacity){              // If index is greater than or equal to the number of available indexes...
-                arrCapacity*=2;                             // Double the array capacity variable.
+                //arrCapacity*=2;                             // Double the array capacity variable.
                 numDoublings++;                             // Increment numDoublings.
                 std::cout<<"Doublings: "<<numDoublings<<std::endl;
-                wordItem *temp = new wordItem[arrCapacity]; // Create new array twice the size of previous array.
-                for(int i = 0; i < arrCapacity/2; i++){     // Copy array contents to temporary array.
+                wordItem *temp = new wordItem[arrCapacity*2]; // Create new array twice the size of previous array.
+                for(int i = 0; i < arrCapacity; i++){     // Copy array contents to temporary array.
                 //std::cout<<"Double for loop: "<<i<<std::endl;
                     temp[i].word = words[i].word;
                     temp[i].count = words[i].count;
                 }
                 //std::cout<<"Out of double for Loop"<<std::endl;
+                arrCapacity*=2;                             // Double the array capacity variable.
                 delete []words;                             // Delete array at original memory address.
                 words = temp;                               // Assign words pointer to new memory address.
             }
@@ -116,7 +117,7 @@ class TextAnalyzer{
                     numUniqueWords++;                       // Increase number of unique words.
                     return true;
                 } else {
-                    for(int i = 0; i < numUniqueWords-1; i++){        // Loop through all current values of word struct until...
+                    for(int i = 0; i < arrLoc; i++){        // Loop through all current values of word struct until...
                         //std::cout<<"For Loop: "<<i<<std::endl;
                         if(word == this->words[i].word){    // If word is not new...
                             this->words[i].count++;         // Increase the word count...
@@ -124,16 +125,17 @@ class TextAnalyzer{
                         }   
                     } 
                     //std::cout<<"Done with for loop"<<std::endl;
-                                                                // Otherwise ...                          
-                    for(int i = 0; i < numUniqueWords; i++){            // Find index of where to add the word (sort in alphabetical order).
+                    //arrLoc = 0;                                         // Otherwise ...        
+                    int jaredIndex = 0;                  
+                    for(int i = 0; i < arrLoc; i++){            // Find index of where to add the word (sort in alphabetical order).
                         if(word < this->words[i].word){
-                            arrLoc = i;
+                            jaredIndex = i;
                             break;
                         }
                     }
                     
                     //std::cout<<"Place word at: "<<arrLoc<<std::endl;
-                    insertAt(word, arrLoc);                     // Insert new word at the needed index.
+                    insertAt(word, jaredIndex);                     // Insert new word at the needed index.
                     //if(arrLoc == 0){arrLoc = 1; }
                     return true;
                 } 
@@ -143,6 +145,25 @@ class TextAnalyzer{
         }
 
         void sortByWordCount(){ // Sorts the array by count instead of alphabetically.
+
+        // wordItem *temp = new wordItem[numUniqueWords];
+        // for(int i = 0; i < numUniqueWords; i++){
+        //     temp[i].word = words[i].word;
+        //     temp[i].count = words[i].count;
+        // }
+        // int index = 0;
+        // for(int i = 0; i < numUniqueWords; i++){
+        //     if(temp[i].word == ' '){
+        //     numUniqueWords--;
+        //     wordItem *temp2 = new wordItem[numUniqueWords];
+        //     }
+        //     for(int j = 0; j < i; i++){
+        
+
+        //     }
+        // }
+        
+
 
         for(int i = 0; i < numUniqueWords; i++){
                 std::cout<<words[i].word<<", ";

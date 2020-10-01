@@ -1,0 +1,24 @@
+Gilette, 25
+Oreville, 30
+Keystone, 30
+Addie Camp, 10
+Redfern, 10
+Mystic, 40
+Rochford, 20
+Harney Canyon, 10
+Bluebird, 30
+Redfern, 10
+Mystic, 35
+Rochford, 30
+Harney Canyon, 10
+Bluebird, 30
+Oreville, 30
+Keystone, 30
+Addie Camp, 13
+Redfern, 12
+Mystic, 30
+Gilette, 18
+Oreville, 3
+Keystone, 24
+Gilette, 20
+Bluebird, 40
