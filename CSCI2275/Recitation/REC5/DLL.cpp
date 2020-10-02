@@ -60,8 +60,7 @@ void myLL::append(int value) {
     node->prev = tail; // Point previous pointer of new node to where tail currently is.
     tail->next = node; // Point next pointer of tail (the now second to last node) to the new tail node.
     tail = node;      // Point tail pointer to new tail node.
-    return;
-    
+    return;   
 }
 
 //iterate through LL and print each value

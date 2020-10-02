@@ -1,0 +1,30 @@
+while(crawler != NULL){                                         // While crawler is not a null value...
+    if(name == crawler->name){                                  // If name is the same as the current crawler name...
+        int total = crawler->occupancy + numPassengers;         // Set the total number of passengers for the car...
+        while(total > crawler->capacity){                       // Run until the total is less than the capacity at the crawler...
+            crawler->occupancy = crawler->capacity;             // Fill the train car up completely.
+            total -= crawler->capacity;                         // Subtract the train car capacity from the total number of passengers.
+            trainCar *node = new trainCar;                      // Reinitialize the crawler node.
+            int newTotal = total;                               // Initialize new total variable.
+            if(total > crawler->capacity){                      // If the total is still greater than the train car capacity.
+                crawler->occupancy = crawler->capacity;         // Fill the train car up completely.
+                total -= crawler->capacity;                     // Subtract the train car capacity from the total number of passengers.
+                newTotal = total;                               // Set our new total equal to our total.
+            } else {                                            // Otherwise, if the total is less than the train car capacity...
+                newTotal = total;                               // Set new total equal to total.
+            }                                                   // and
+            addCar(name, numPassengers, newTotal, crawler);     // Add the new car to the linked list at the position of the crawler.
+        }
+        if(total < crawler->capacity){                          // If the total is less than the train car capacity...
+            crawler->occupancy = total;                         // Set the occumancy equal to the number of remaining passengers.
+        }
+    }
+
+    if(crawler->occupancy == crawler->capacity){                // If the occupancy is equal to the capacity...
+        trainCar *node = new trainCar;                          // Create a new node.
+        node->next = NULL;                                      // Set the next value of the new node to NULL.
+        node->next->capacity = crawler->capacity;               
+        node->next->name = crawler->name;
+    }
+    crawler = crawler->next;
+}

@@ -34,6 +34,8 @@ public:
     void buildTrain(std::string names[], int caps[], int trainSize);
     void printTrain();
     void addPassengers(std::string name, int numPassengers);
+    void prepend(std::string name, int capacity);
+    void append(std::string name, int capacity);
 protected:
 private:
     trainCar *engine;//head of the linked list
