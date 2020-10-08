@@ -40,7 +40,6 @@ protected:
 private:
     trainCar *engine;//head of the linked list
     trainCar *caboose;//tail of the linked list
-    int numCarTypes = 9; //number of unique car names, not including engine and caboose
     void addCar(std::string n, int c, int o, trainCar *p);
     
 

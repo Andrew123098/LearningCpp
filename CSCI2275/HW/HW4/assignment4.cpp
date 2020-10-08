@@ -29,6 +29,7 @@ int main(int argc, char* argv[]){
         getline(ss, name, ',');
         getline(ss, snumPassengers);
         numPassengers = stoi(snumPassengers);
+        cout<<"Add Passengers: "<<name<<":"<<numPassengers<<endl;
         train->addPassengers(name, numPassengers);
     }
     train->printTrain();
