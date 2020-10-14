@@ -99,7 +99,7 @@ order to the end of the train, and then back again to the head of the train.	*/
 }
 
 void Train::buildTrain(std::string names[], int caps[], int trainSize){
-/* Build the initial train from the cars given in this writeup. The cars can be fixed in the function, 
+/* Build the initial train from the cars given in this writeup in a circular queue. The cars can be fixed in the function, 
 you do not need to write the function to work with any list of cars. */
 
     trainCar *crawler = new trainCar(names[0], caps[0], 1, NULL, NULL);
