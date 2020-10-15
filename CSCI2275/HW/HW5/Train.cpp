@@ -4,6 +4,7 @@
 #include <string>
 #include <stdlib.h>
 #include "Train.h"
+#include "Queue.h"
 
 using namespace std;
 
@@ -81,6 +82,107 @@ while(crawler != nullptr){                                               // Whil
     }    
 } 
 
+void Train::removePassengers(){
+    /* This option simulates passengers leaving the train. The user enters the name
+    of a car and the number of passengers exiting. When a car is empty, delete it. 
+    If the number of passenegrs is greater than capacity, set occupancy = 0 and delete the car.*/
+
+    //ask user for number of passengers and car
+    bool nameChecker = false;
+    char removeName[100];
+    int removePassengers = -1;
+    trainCar *crawler = new trainCar;
+    
+
+    // Make sure name entered equals one of the names in the train that is not the engine or caboose.           
+    while(nameChecker == false){
+        crawler = engine;
+        cout<<endl<<"Please enter a car name from the train below: "<<endl;
+        printTrain();
+        cout<<endl<<"Car Name: ";
+        cin.getline(removeName, sizeof(removeName));
+        cout<<endl;
+        while(crawler->next != nullptr){
+            if(removeName == crawler->name){
+                nameChecker = true;
+                break;
+            }
+            crawler = crawler->next;
+        }
+        // Check the last value of the train
+        if(crawler->next == nullptr){
+            if(crawler->name == removeName){
+                nameChecker = true;
+            } else { // Throw an error if input name does not match any car name
+                cout<<"ERROR: Your input did not match any of the car names. "<<endl;
+            }
+        }
+
+        // Make sure they don't choose the engine or caboose
+        if(removeName == engine->name || removeName == caboose->name){
+            nameChecker = false;
+            cout<<"ERROR: You cannot remove train workers."<<endl;
+        }
+    }
+
+    // Make sure the person enters a positive, non-zero number
+    while(removePassengers <= 0){
+        cout<<"Please enter the number of people to remove from the car: ";
+        cin>>removePassengers;
+        cout<<endl;
+        if(removePassengers < 0){
+            cout<<"ERROR: Please enter a positive number."<<endl;
+        } else if(removePassengers == 0){
+            cout<<"No passengers were removed."<<endl;
+            return;
+        }
+    }
+
+    // Remove the given number of passengeres from the given car.
+    // If total people removed is greater than the occupancy, set occupancy to 0 and delete the car.
+    if(removePassengers >= crawler->occupancy){
+        trainCar *temp = new trainCar;
+        temp = crawler;
+        crawler = crawler->previous;
+
+        temp->occupancy = 0;
+        temp->capacity = 0;
+
+        crawler->next = temp->next;
+        temp->next->previous = crawler;
+        
+        cout<<"There are 0 people left in "<<temp->name<<"."<<endl;
+        cout<<temp->name<<" was deleted from the train."<<endl<<endl;
+        delete temp;
+    } else { // Otherwise, just remove the passengers.
+        crawler->occupancy = crawler->occupancy-removePassengers;
+        cout<<"There were "<<removePassengers<<" removed from "<<crawler->name<<"."<<endl;
+        cout<<"There are still "<<crawler->occupancy<<" people in "<<crawler->name<<"."<<endl<<endl;
+    }
+    return;
+}
+
+void Train::removeAllPassengers(){
+/*This option simulates all remaining passengers leaving the train. Start from the front of	the	
+train and move to the back of the train. Don’t delete the engine or the caboose. Before a car is 
+deleted, print the name of the car and the number of passengers.*/
+
+    trainCar *crawler = new trainCar;
+    trainCar *deletor = new trainCar;
+    crawler = engine;
+    deletor = engine->next;
+
+    while(crawler->next != caboose){
+        crawler->next = deletor->next;
+        deletor->next->previous = crawler;
+        cout<<"Deleting "<<deletor->name<<" which has "<<deletor->occupancy<<" passengers."<<endl;
+        delete deletor;
+        deletor = crawler->next;
+    }
+    printTrain();
+    cout<<endl;
+}
+
 void Train::printTrain(){
 /* Start at the head of the train and print the name and occupancy of each car in 
 order to the end of the train, and then back again to the head of the train.	*/
@@ -95,7 +197,7 @@ order to the end of the train, and then back again to the head of the train.	*/
         cout << " --> ";                                // Print an arrow.
         crawler = crawler->next;                        // Point crawler to next node.
         }
-    cout<<caboose->name<<":"<<caboose->occupancy<<endl<<endl;
+    cout<<caboose->name<<":"<<caboose->occupancy<<endl;
 }
 
 void Train::buildTrain(std::string names[], int caps[], int trainSize){

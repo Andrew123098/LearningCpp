@@ -105,6 +105,7 @@ int main(int argc, char *argv[]){
                     for(index = 0; index < 9; index++){
                         if(input.carName == names[index]){
                             nameChecker = true;
+                            break;
                         }
                     }
                     if(nameChecker == false){
@@ -114,7 +115,7 @@ int main(int argc, char *argv[]){
 
                 // Check if user input a valid number of tickets
                 while(countChecker == false){
-                    cout<<endl<<"Please enter the number of passengers you wish to add. Due to limited space, please enter a number less than "<<caps[index]<<": ";
+                    cout<<"Please enter the number of passengers you wish to add. Due to limited space, please enter a number less than "<<caps[index]<<": ";
                     cin>>input.passengers;
                     if(input.passengers > caps[index]){
                         cout<<"We do not have that much space in that car. Please enter a lower number"<<endl;
@@ -134,21 +135,24 @@ int main(int argc, char *argv[]){
             }
             case 3:
             {
-                //dequeue
-                //bool success = myTrain.dequeuePassengers()
-                //passengers will be added to the train if success = true, that happens in dequeuePassengers
+                // Dequeue and passengers to train
+                carPassengers addNewPassengers;
+                addNewPassengers = myQueue.dequeue();
+                
+                // Passengers will be added to the train if success = true, that happens in dequeuePassengers
+                myTrain.addPassengers(addNewPassengers.carName, addNewPassengers.passengers);
                 break;
             }
             case 4:
             {
                 //remove passengers
-                //ask user for number of passengers and car
-                //myTrain.removePassengers(string name, int numPassengers)
+                myTrain.removePassengers();
                 break;
             }
             case 5:
             {
                 //remove all passengers and delete cars
+                myTrain.removeAllPassengers();
                 break;
             }
             case 6:
@@ -176,8 +180,6 @@ int main(int argc, char *argv[]){
         
         cout << dmenu << endl;
     }
-
-    
 
     }    
 
