@@ -1,0 +1,13 @@
+Lines: 200 | LL Avg. Operations: 213.081 | BST Avg. Operations: 7.82591
+Lines: 400 | LL Avg. Operations: 354.641 | BST Avg. Operations: 8.26226
+Lines: 600 | LL Avg. Operations: 466.371 | BST Avg. Operations: 8.40784
+Lines: 800 | LL Avg. Operations: 552.023 | BST Avg. Operations: 8.50672
+Lines: 1000 | LL Avg. Operations: 631.586 | BST Avg. Operations: 8.59534
+Lines: 1200 | LL Avg. Operations: 696.411 | BST Avg. Operations: 8.63636
+Lines: 1400 | LL Avg. Operations: 766.345 | BST Avg. Operations: 8.64382
+Lines: 1600 | LL Avg. Operations: 826.323 | BST Avg. Operations: 8.65449
+
+LL Nodes: 2454
+LL Words: 25539
+BST Nodes: 2454
+BST Words: 25550
