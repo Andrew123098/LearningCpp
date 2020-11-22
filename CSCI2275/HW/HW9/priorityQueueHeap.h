@@ -15,32 +15,59 @@ using namespace std;
 // global array where each index contains a pointer to a data struct called person (name, delivery time and treatment time)
 // in constructor of heap, pass in the number of people and then declare an arry of that size
 
-struct patientHP{
-    string name;   // Name of patient.
-    int priority;  // Estimated time until baby is born b/w 30 and 300 minutes.
-    int treatment; // Estimates time that patient needs to spend with the doctor.
+struct person{ 
+    string name;     // Name of patient.
+    int timeToDel;   // Estimated time until baby is born b/w 30 and 300 minutes.
+    int timeToTreat; // Estimates time that patient needs to spend with the doctor.
 
-    patientHP(){};   // Default constuctor.
-    patientHP(string initName, int initPriority, int initTreatment){
+    person(){};   // Default constuctor.
+    person(string initName, int initDel, int initTreat){
         name = initName;
-        priority = initPriority;
-        treatment = initTreatment;
+        timeToDel = initDel;
+        timeToTreat = initTreat;
+    }
+
+    // overload the > and < operators for struct
+    bool operator>(person p2) const{
+        return timeToDel > p2.timeToDel;
+    }
+    bool operator<(person p2) const{
+        return timeToDel < p2.timeToDel;
+    }
+    // if timeToDel is equal than check the timeToTreat
+    // overlaod == operator for struct
+    bool operator==(person p2) const{
+        if(timeToDel == p2.timeToDel){
+            return timeToTreat < p2.timeToTreat;
+        } else {
+            return timeToDel < p2.timeToDel;
+        }
+    }
+};
+struct compare{
+    bool operator()(person p, person p2){
+        if(p.timeToDel != p2.timeToDel){
+            return p > p2;
+        } else {
+            return p.timeToTreat > p2.timeToTreat;
+        }
     }
 };
 
 class pqHP
 {
     public:
-        pqHP(){};                        // Default constructor.
-        pqHP(int c);                     // Constructor that defines capacity.
-        patientHP* pop();                // Return highest priority very very pregnant person.
-        void push(patientHP* person);    // Add very very pregnant person to the priority queue.
-        void printPQ();                  // Print the in order priority queue.
-        int capacity;                    // Stores max capacity of heap.
+        pqHP(){};                          // Default constructor.
+        pqHP(int c);                       // Constructor that defines capacity.
+        person* pop();                     // Return highest priority very very pregnant person.
+        void push(string n, int D, int T); // Add very very pregnant person to the priority queue.
+        void printPQ();                    // Print the in order priority queue.
+        int capacity;                      // Stores max capacity of heap.
  
     private:              
-        patientHP* heap;                 // Initializes pointer to array that is a heap.
-        void reorder(patientHP* person); // Called by pop to properly reorder the priority queue.
+        person* heap;                   // Initializes pointer to array that is a heap.
+        void minHeapify(int index);     // Called by pop to properly reorder the priority queue.
+        void printPQHelper(int index);  // Recursive helper function for printing the PQ.
 };
 
 #endif
