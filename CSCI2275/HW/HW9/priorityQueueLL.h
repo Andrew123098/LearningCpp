@@ -12,36 +12,74 @@
 
 using namespace std;
 
-struct patientLL{
-    string name;   // Name of patient.
-    int priority;  // Estimated time until baby is born b/w 30 and 300 minutes.
-    int treatment; // Estimates time that patient needs to spend with the doctor.
+struct LLPerson{ 
+    string name;     // Name of patient.
+    int timeToDel;   // Estimated time until baby is born b/w 30 and 300 minutes.
+    int timeToTreat; // Estimates time that patient needs to spend with the doctor.
 
-    patientLL* next; // Next patient in Linked List.
-    patientLL* prev; // Previous patient in Linked List.
+    LLPerson* next; // Next patient in Linked List.
 
-    patientLL(){};   // Default constuctor.
-    patientLL(string initName, int initPriority, int initTreatment, patientLL* initNext, patientLL* initPrev){
+    LLPerson(){};   // Default constuctor.
+    LLPerson(string initName, int initDel, int initTreat){
         name = initName;
-        priority = initPriority;
-        treatment = initTreatment;
+        timeToDel = initDel;
+        timeToTreat = initTreat;
+        next = NULL;
+    }
+    LLPerson(string initName, int initDel, int initTreat, LLPerson* initNext){
+        name = initName;
+        timeToDel = initDel;
+        timeToTreat = initTreat;
         next = initNext;
-        prev = initPrev;
+    }
+
+
+    // overload the > and < operators for struct
+    bool operator>(LLPerson p2) const{
+        if(timeToDel == p2.timeToDel)
+            return timeToTreat > p2.timeToTreat;
+        
+        return timeToDel > p2.timeToDel;
+    }
+    bool operator<(LLPerson p2) const{
+        if(timeToDel == p2.timeToDel)
+            return timeToTreat < p2.timeToTreat;
+        
+        return timeToDel < p2.timeToDel;
+    }
+    // if timeToDel is equal than check the timeToTreat
+    // overlaod == operator for struct
+    bool operator==(LLPerson p2) const{
+        if(timeToDel == p2.timeToDel){
+            return timeToTreat < p2.timeToTreat;
+        } else {
+            return timeToDel < p2.timeToDel;
+        }
+    }
+};
+struct LLCompare{
+    bool operator()(LLPerson p, LLPerson p2){
+        if(p.timeToDel != p2.timeToDel){
+            return p > p2;
+        } else {
+            return p.timeToTreat > p2.timeToTreat;
+        }
     }
 };
 
 class pqLL
 {
     public:
-        pqLL();                        // Default constructor.
-        patientLL* pop();              // Return highest priority very very pregnant person.
-        void push(patientLL* person);  // Add very very pregnant person to the priority queue.
-        void printPQ();                // Print the in order priority queue.
+        pqLL();                       // Default constructor.
+        LLPerson* pop();              // Return highest priority very very pregnant person.
+        void push(LLPerson person);   // Add very very pregnant person to the priority queue.
+        void printPQ();               // Print the in order priority queue.
+        int curr_size;                // Holds the current size of the linked list.
 
     private:
-        void reorder(patientLL* head); // Called by pop to properly reorder the priority queue.
-        patientLL* head;               // Stores the head of the Linked List.
-        patientLL* tail;               // Stores the tail of the Linked List.
+        void reorder(LLPerson* head); // Called by pop to properly reorder the priority queue.
+        LLPerson* head;               // Stores the head of the Linked List.
+        LLPerson* tail;               // Stores the tail of the Linked List.
 };
 
 #endif
