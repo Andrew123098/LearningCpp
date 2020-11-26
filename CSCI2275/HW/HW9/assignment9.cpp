@@ -104,15 +104,6 @@ int main(int argc, char *argv[]){
         LLPeople.push_back(tmpLL);
     }
 
-    // for(int i = 0; i < 880; i++){
-    //     ll.push(LLPeople[i]);
-    // }
-    ll.push(LLPeople[0]);
-    ll.push(LLPeople[1]);
-    //ll.push(LLPeople[2]);
-    //ll.push(LLPeople[3]);
-    ll.printPQ();
-/*
     // Runtime Analysis:
 
     int numRows[8] = {100,200,300,400,500,600,700,800}; // Number of data points to run. 
@@ -123,14 +114,14 @@ int main(int argc, char *argv[]){
     // HEAP
     for(int i = 0; i < 8; i++){                             
         for(int j = 0; j < 100; j++){
-            auto t1 = chrono::high_resolution_clock::now();
+            auto t1 = chrono::system_clock::now();
             for(int k = 0; k < numRows[i]-1; k++){
                 hp.push(names[k],delivery[k],treatment[k]);
             }
             while(hp.curr_size != 0){
                 hpPerson popped = hp.pop();
             }
-            auto t2 = chrono::high_resolution_clock::now();
+            auto t2 = chrono::system_clock::now();
             heapRuntimes[j][i] = chrono::duration_cast<chrono::microseconds>(t2-t1).count();
         }
     }
@@ -142,18 +133,18 @@ int main(int argc, char *argv[]){
     // LINKED LIST
     for(int i = 0; i < 8; i++){                             
         for(int j = 0; j < 100; j++){
-            auto t1 = chrono::high_resolution_clock::now();
+            auto t1 = chrono::system_clock::now();
             for(int k = 0; k < numRows[i]-1; k++){
-                ll.push(LLPeople[k]);
+                ll.push(&LLPeople[k]);
             }
-            while(hp.curr_size != 0){
+            while(ll.curr_size != 0){
                 LLPerson* popped = ll.pop();
             }
-            auto t2 = chrono::high_resolution_clock::now();
+            auto t2 = chrono::system_clock::now();
             LLRuntimes[j][i] = chrono::duration_cast<chrono::microseconds>(t2-t1).count();
         }
     }
-    cout<<"LINKED LIST:"<<endl;
+    cout<<endl<<endl<<"LINKED LIST:"<<endl;
     for(int i = 0; i < 100; i++){
         cout<<LLRuntimes[i][0]<<" "<<LLRuntimes[i][1]<<" "<<LLRuntimes[i][2]<<" "<<LLRuntimes[i][3]<<" "<<LLRuntimes[i][4]<<" "<<LLRuntimes[i][5]<<" "<<LLRuntimes[i][6]<<" "<<LLRuntimes[i][7]<<" "<<endl;
     }
@@ -163,14 +154,14 @@ int main(int argc, char *argv[]){
 
     for(int i = 0; i < 8; i++){                             
         for(int j = 0; j < 100; j++){
-            auto t1 = chrono::high_resolution_clock::now();
+            auto t1 = chrono::system_clock::now();
             for(int k = 0; k < numRows[i]-1; k++){
                 pq.push(people[k]);
             }
             while(hp.curr_size != 0){
                 pq.pop();
             }
-            auto t2 = chrono::high_resolution_clock::now();
+            auto t2 = chrono::system_clock::now();
             BIRuntimes[j][i] = chrono::duration_cast<chrono::microseconds>(t2-t1).count();
         }
     }
@@ -178,5 +169,4 @@ int main(int argc, char *argv[]){
     for(int i = 0; i < 100; i++){
         cout<<BIRuntimes[i][0]<<" "<<BIRuntimes[i][1]<<" "<<BIRuntimes[i][2]<<" "<<BIRuntimes[i][3]<<" "<<BIRuntimes[i][4]<<" "<<BIRuntimes[i][5]<<" "<<BIRuntimes[i][6]<<" "<<BIRuntimes[i][7]<<" "<<endl;
     }
-*/
 } 

@@ -19,7 +19,12 @@ struct LLPerson{
 
     LLPerson* next; // Next patient in Linked List.
 
-    LLPerson(){};   // Default constuctor.
+    LLPerson(){
+        name = "";
+        timeToDel = 0;
+        timeToTreat = 0;
+        next = NULL;
+    };   // Default constuctor.
     LLPerson(string initName, int initDel, int initTreat){
         name = initName;
         timeToDel = initDel;
@@ -72,7 +77,7 @@ class pqLL
     public:
         pqLL();                       // Default constructor.
         LLPerson* pop();              // Return highest priority very very pregnant person.
-        void push(LLPerson person);   // Add very very pregnant person to the priority queue.
+        void push(LLPerson* person);   // Add very very pregnant person to the priority queue.
         void printPQ();               // Print the in order priority queue.
         int curr_size;                // Holds the current size of the linked list.
 

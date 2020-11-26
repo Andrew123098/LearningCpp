@@ -19,79 +19,75 @@ LLPerson* pqLL::pop(){
 /* Return highest priority very very pregnant person. */
     // If the LL is empty.
     if(curr_size == 0){
-        cout<<"LL is empty."<<endl;
+        //cout<<"LL is empty."<<endl;
         return NULL;
     }
+    // If the LL has 1 value in it.
     if(curr_size == 1){
-        LLPerson* toRet = new LLPerson;
-        toRet = head;
+        LLPerson* toRet = head;
         head = NULL;
         tail = NULL;
         curr_size--;
         return toRet;
     }
-    
-    LLPerson* toRet = new LLPerson;
-    toRet = head;
+    LLPerson* toRet = head;
+    //cout<<toRet->name<<endl;
     head = head->next;
     toRet->next = NULL;
     curr_size--;
     return toRet;
 }                 
 
-void pqLL::push(LLPerson person){
+void pqLL::push(LLPerson *person){
 /* Add very very pregnant person to the priority queue. */
-    LLPerson pPerson = person;
-    LLPerson* newPerson = &pPerson;
-    LLPerson* crawler = new LLPerson;
-    crawler = head;
+    LLPerson* crawler = head;
 
 // CASE: LL is empty.
-    if(curr_size == 0){
-        head = newPerson;
-        tail = newPerson;
+    if(curr_size == 0){ 
+        head = person;
+        tail = person;
         curr_size++;
-        cout<<head->name<<endl;
         return;
     }
 // CASE: LL has 1 value.
     if(curr_size == 1){
-        if(newPerson > head){
-            head->next = newPerson;
-            tail = newPerson;
-            cout<<"1"<<endl;
-        } else {
-            newPerson->next = head;
-            head = newPerson;
-            cout<<"2"<<endl;
+        if(person->timeToDel > head->timeToDel){
+            head->next = person;
+            tail = person;
+        } else if(person->timeToDel < head->timeToDel) {
+            person->next = head;
+            head = person;
+            tail = person->next;
         }
-        cout<<head->name<<"-->"<<head->next->name<<endl;
         curr_size++;
         return;
     }
 
 // CASE: Higher priority than head.
-    if(newPerson < head){
-        newPerson->next = head;
-        head = newPerson;
+    if(person->timeToDel < head->timeToDel || (person->timeToDel == head->timeToDel && person->timeToTreat < head->timeToTreat)){
+        person->next = head;
+        head = person;
         curr_size++;
         return;
     }
 
 // CASE: Lower priority than tail.
-    if(newPerson > tail){
-        tail->next = newPerson;
-        tail = newPerson;
+    if(person->timeToDel > tail->timeToDel || (person->timeToDel == head->timeToDel && person->timeToTreat > head->timeToTreat)){
+        tail->next = person;
+        tail = person;
         curr_size++;
         return;
     }
 
 // CASE: Add middle value.
-    while(newPerson > crawler->next){
+    while(person->timeToDel > crawler->next->timeToDel){
         crawler = crawler->next;
     }
-    newPerson->next = crawler->next;
-    crawler->next = newPerson;
+    while(person->timeToTreat > crawler->next->timeToTreat && crawler->next->name == person->name){
+        crawler = crawler->next;
+    }
+    person->next = crawler->next;
+    crawler->next = person;
     curr_size++;
 }    
 
@@ -104,4 +100,3 @@ void pqLL::printPQ(){
         crawler = crawler->next;
     }
 }
-
