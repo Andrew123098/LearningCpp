@@ -169,4 +169,7 @@ int main(int argc, char *argv[]){
     for(int i = 0; i < 100; i++){
         cout<<BIRuntimes[i][0]<<" "<<BIRuntimes[i][1]<<" "<<BIRuntimes[i][2]<<" "<<BIRuntimes[i][3]<<" "<<BIRuntimes[i][4]<<" "<<BIRuntimes[i][5]<<" "<<BIRuntimes[i][6]<<" "<<BIRuntimes[i][7]<<" "<<endl;
     }
+
+    
 } 
+
