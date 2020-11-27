@@ -1,1 +1,30 @@
 THIS IS THE README FOR MY FINAL PROJECT FOR CSCI2275
+
+Purpose: Create an efficient parking lot system for personal venture.
+
+Data Structures:
+ - Red-Black Tree
+ - Priority Queue
+
+Structures:
+ - parkingSpot
+   - int number             // Contains the number of the parking ParkingSpot
+   - int timeIn             // Holds the realtime the car entered the parking lot (may need to be of type chrono using chrono.h).
+   - bool reserved          // Tells whether the spot is reserved or not (People w/ reserved spots will need a pass in their window and will have a yellow light instead of read or green)
+   - bool taken             // Tells whether the spot is taken using sensors over each parking spot (Green light indicates open and red light indicates taken)
+   - string color           // Used for rebalancing the tree
+   - parkingSpot* left      // Stores left child in tree
+   - parkingSpot* right     // Stores right child in tree
+   - parkingSpot* parent    // Stores parent in tree
+
+Members: 
+ - void carEnters(parkingSpot p)           // Add to the RB tree.
+ - parkingSpot* carLeaves()                // Remove from the RB tree.
+ - void recolor(parkingSpot* root)         // Balance the RB tree.
+ - void rightRotate(parkingSpot* rootST)   // Called by recolor to rebalance the tree at a certain subtree root.
+ - void leftRotate(parkingSpot* rootST)    // Called by recolor to rebalance the tree at a certain subtree root.
+ - parkingSpot* search()
+
+ 
+
+
