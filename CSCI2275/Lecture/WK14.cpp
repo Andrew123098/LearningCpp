@@ -69,7 +69,7 @@
 // - same as inserting into a BST w/ a few additions.
 //      - Replace nullptr w/ null node in our insert.
 //      - set color of new node to red
-//      - Resolve any violations of RB propertiesusing recoloring and rotation.
+//      - Resolve any violations of RB properties using recoloring and rotation.
 // - If adding node to empty tree, broken rule that root is black, so fix by making root black.
 // - If add 5 (b), 3 (r) and 2 (r), this violates the rule that a root of a subtree must have an equal number of blac nodes in al paths
 //      - if we rotate, and 
