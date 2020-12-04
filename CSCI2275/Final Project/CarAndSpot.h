@@ -8,6 +8,8 @@
 
 using namespace std;
 
+enum Color {RED, BLACK};
+
 struct Car{
 /* Holds info about specific car or user (part of rbNode struct) */
     time_t timeIn;        // Holds real time car enters parking lot.
@@ -17,7 +19,10 @@ struct Car{
 
     Car(){ //dtor
         timeIn = time(0); // Get real time.
-    };
+    }; // 
+    Car(time_t initTimeIn){
+        timeIn = initTimeIn;
+    }
 };
 
 struct Spot{
@@ -42,20 +47,24 @@ struct rbNode{
     rbNode* right;                // Pointer to node's right child.
     rbNode* left;                 // Pointer to node's left child.
     rbNode* parent;               // Pointer to node's parent.
+    bool color;                   // Either red or black.
 
     rbNode(){};                   // dtor
     rbNode(rbNode* initParent){   // Initialize a leaf/Null node in Red-black tree.
-        parent = initParent;
+        spot.spotNumber = -1;     // Used to tell if node is a leaf node.
+        parent = initParent; 
         right = NULL;
         left = NULL;
+        color = BLACK;
     }
     // Initialize full node in RB tree.
-    rbNode(int initSpotNum, bool initReserved, bool initTaken, rbNode* initRight, rbNode* initLeft, rbNode*initParent){
-        Car car();
+    rbNode(int initSpotNum, bool initReserved, bool initTaken, time_t initIn, rbNode* initRight, rbNode* initLeft, rbNode*initParent){
+        Car car(initIn);
         Spot spot(initSpotNum, initReserved, initTaken);
         parent = initParent;
         right = initRight;
         left = initLeft;
+        color = RED;
     }
 };
 
@@ -63,18 +72,26 @@ class rbTree
 /* Class for red-black tree for parking lot organization. */
 {
     public:
-        rbTree();                             // Constructor
-        void carEnters(rbNode entering);      // Add car to RB tree.
-        rbNode* carLeaves(rbNode leaving);    // Delete car from RB tree and charge customer.
-        rbNode* search(int spotNum);          // Search for node in tree based on spot number.
+        rbTree();                               // Default constructor.
+        rbTree(int initNumSpots);               // Overloaded Constructor (defines parking lot size).
+        ~rbTree();                              // Destructor.
+        void carEnters(time_t in);              // Add car to RB tree.
+        rbNode* carLeaves(rbNode leaving);      // Delete car from RB tree and charge customer.
+        rbNode* search(int spotNum);            // Search for node in tree based on spot number.
+        int getNumSpots();                      // Gets the number of spots in the parking lot.
+        int getNumCars();                       // Gets the number of spots available.
+        void printRBTree();                     // Prints the entire RB tree in order.
     private:
-        void recolor(rbNode* root);           // Main function used to balance the tree.
-        void rightRotate(rbNode* rootST);     // Rotates a subtree (or the root) right (used for balancing).
-        void leftRotate(rbNode* rootST);      // Rotates a subtree (or the root) left used for balancing).
-        void assignSpot(rbNode* entering);    // Used to randomly assign a spot to people entering the parking lot.
-        void reserveSpot();                   // Used to reserve a spot in the parking lot.
-        rbNode* root;                         // Points to the root of the RB tree.
-
+        rbNode* carEntersHelper(rbNode* root, time_t in);// Helper for carEnters (is a BST insert function).
+        void fixTree(rbNode* root, rbNode* newCar);      // Main function used to balance the tree.
+        void recolor(rbNode* parent, rbNode* uncle);     // Recolors based on RB tree rules.
+        void rightRotate(rbNode* node);                  // Rotates a subtree (or the root) right (used for balancing).
+        void leftRotate(rbNode* node);                   // Rotates a subtree (or the root) left used for balancing).
+        void printRBTreeHelper(rbNode* node);            // Helper for recursive print.
+        int assignSpot();                       // Used to randomly assign a spot to people entering the parking lot.
+        void reserveSpot();                     // Used to reserve a spot in the parking lot.
+        rbNode* root;                           // Points to the root of the RB tree.
+        int numSpots;                           // Holds the number of spots in the parking lot.
+        int numCars;                            // Holds the number of cars in the parking lot.
 };
-
 #endif
