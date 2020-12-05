@@ -17,15 +17,15 @@ rbTree::rbTree(int initNumSpots){
 /* Constructor */
     numSpots = initNumSpots;
     root = NULL;
+    for(int i = 0; i < numSpots; i++){
+        taken.push_back(false);
+    }
 }
 
 void rbTree::carEnters(time_t in){
 /* Add car to RB tree. */
-    
     rbNode* newCar = carEntersHelper(root, in); // BST insert
-
-    // call recolor.
-
+    //fixTree(root,newCar);
 } 
 
 rbNode* rbTree::carEntersHelper(rbNode* node, time_t in){
@@ -33,28 +33,51 @@ rbNode* rbTree::carEntersHelper(rbNode* node, time_t in){
     
     // If the tree is empty, make new node the root and return the new node.
     if(root == NULL){
+        cout<<"New Root"<<endl;
         numCars++;
-        rbNode tmp = rbNode(assignSpot(),0,1,in,NULL,NULL,NULL);
-        node = &tmp;
-        root = node;
-        return node;
+        int spotNum = assignSpot();
+        root = new rbNode(spotNum,0,1,in,NULL,NULL,NULL);
+        string st;
+        st = ctime(&root->car.timeIn);
+        cout<<st<<endl;
+        return NULL;
     }
 
-    // Otherwise, recurse down the tree.
-    if(difftime(in,node->car.timeIn) > 0){                          // Consider right subtree.
-        node->right = carEntersHelper(node->right,in);  
-        node->right->parent = node;
-    } else if (difftime(in,node->car.timeIn) < 0){                  // Consider left subtree.
-        node->left = carEntersHelper(node->left,in); 
-        node->left->parent = node;
+    // Consider right subtree.
+    if(difftime(in,node->car.timeIn) > 0){  
+        // Empty right subtree.
+        if(node->right == NULL){
+            node->right = new rbNode(assignSpot(),0,1,in,NULL,NULL,node);
+            //taken[node->right->spot.spotNumber] = true;
+            cout<<node->right->spot.spotNumber<<endl;
+            numCars++;
+            return node->right;
+       
+        // Not Empty.
+        } else {
+            return carEntersHelper(node->right,in);
+        }      
+   
+    // Consider left subtree.
+    } else {
+        // Empty left subtree.
+        if(node->left == NULL){
+            node->left = new rbNode(assignSpot(),0,1,in,NULL,NULL,node);
+            //taken[node->left->spot.spotNumber] = true;
+            numCars++;
+            return node->left;
+
+        // Not Empty.
+        } else {
+            return carEntersHelper(node->left,in);
+        }               
     }
-    return node;
 }
 
-rbNode* rbTree::carLeaves(rbNode leaving){
+float rbTree::carLeaves(int numSpot){
 /* Delete car from RB tree and charge customer. */
 
-    return NULL;
+    return 0;
 }    
 
 
@@ -87,11 +110,13 @@ void rbTree::printRBTreeHelper(rbNode* node){
         return;                         // Return.
     }
 
-    printRBTreeHelper(node->left);      // Get the smallest node first.
-    
-    cout<<"Spot #"<<node->spot.spotNumber<<" : "<<"Time In: "<<ctime(&node->car.timeIn)<<"-->";
-
     printRBTreeHelper(node->right);     // Then get the largest node.
+    
+    string st;
+    st = ctime(&node->car.timeIn);
+    cout<<"Spot #"<<node->spot.spotNumber<<" : "<<"Time In: "<<st<<"-->";
+
+    printRBTreeHelper(node->left);      // Get the smallest node first.
 
 }
 
@@ -243,11 +268,14 @@ void rbTree::leftRotate(rbNode* node){
 
 int rbTree::assignSpot(){
 /* Used to randomly assign a spot to people entering the parking lot. */
-    srand((unsigned) time(0));               // Make sure new number generated is different each time program is run.
-    int randomSpot = rand()%numSpots;        // Generate random spot between 0 and total number of spots -1 (0-indexed).
-    return randomSpot;
-
-    //TODO: Make sure the randomly assigned spot is not taken in the tree.
+    int randomSpot;
+    do{
+    srand((unsigned) time(0));           // Make sure new number generated is different pattern each time program is run.
+    randomSpot = rand()%numSpots;        // Generate random spot between 0 and total number of spots -1 (0-indexed).
+    }while(taken[randomSpot]);           // Check if spot is already taken.
+    taken[randomSpot] = true;            // Mark the spot as taken in taken vector.
+    cout<<"Assigning "<<randomSpot<<endl;
+    return randomSpot;                   // Return spot.
 }
 
 void rbTree::reserveSpot(){
@@ -255,3 +283,14 @@ void rbTree::reserveSpot(){
 
 
 }                
+
+// int main(){
+
+//     int initNumSpots = 40;
+//     rbTree rb(initNumSpots);
+
+//     time_t t;
+//     time(&t);
+//     rb.carEnters(t);
+//     rb.printRBTree();
+// }

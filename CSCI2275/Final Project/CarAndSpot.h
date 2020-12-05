@@ -5,6 +5,7 @@
 #include <iostream>
 #include <ctime>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -76,7 +77,7 @@ class rbTree
         rbTree(int initNumSpots);               // Overloaded Constructor (defines parking lot size).
         ~rbTree();                              // Destructor.
         void carEnters(time_t in);              // Add car to RB tree.
-        rbNode* carLeaves(rbNode leaving);      // Delete car from RB tree and charge customer.
+        float carLeaves(int numSpot);           // Delete car from RB tree and charge customer.
         rbNode* search(int spotNum);            // Search for node in tree based on spot number.
         int getNumSpots();                      // Gets the number of spots in the parking lot.
         int getNumCars();                       // Gets the number of spots available.
@@ -93,5 +94,6 @@ class rbTree
         rbNode* root;                           // Points to the root of the RB tree.
         int numSpots;                           // Holds the number of spots in the parking lot.
         int numCars;                            // Holds the number of cars in the parking lot.
+        vector<bool> taken;                     // Vector that stores all taken values for easy access (0 = taken, 1 = not taken).
 };
 #endif
