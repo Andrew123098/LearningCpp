@@ -8,6 +8,11 @@
 #include <stack>
 #include "CarAndSpot.h"
 
+/* Current Bugs:
+ * Print does not print in order. Probably due to not adding in order.
+ * Seg fault on 1 case when car is leaf and tree is lss than 7 nodes large.
+ */
+
 /* Sources:
     - https://github.com/Bibeknam/algorithmtutorprograms/blob/master/data-structures/red-black-trees/RedBlackTree.cpp
     - https://algorithmtutor.com/Data-Structures/Tree/Red-Black-Trees/
