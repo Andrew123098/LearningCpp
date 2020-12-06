@@ -51,17 +51,13 @@ struct rbNode{
     bool color;                   // Either red or black.
 
     rbNode(){};                   // dtor
-    rbNode(rbNode* initParent){   // Initialize a leaf/Null node in Red-black tree.
-        spot.spotNumber = -1;     // Used to tell if node is a leaf node.
-        parent = initParent; 
-        right = NULL;
-        left = NULL;
-        color = BLACK;
-    }
     // Initialize full node in RB tree.
     rbNode(int initSpotNum, bool initReserved, bool initTaken, time_t initIn, rbNode* initRight, rbNode* initLeft, rbNode*initParent){
         Car car(initIn);
-        Spot spot(initSpotNum, initReserved, initTaken);
+        Spot* pSpot = &spot;
+        spot.spotNumber = initSpotNum;
+        spot.reserved = initReserved;
+        spot.taken = initTaken;
         parent = initParent;
         right = initRight;
         left = initLeft;
@@ -74,26 +70,35 @@ class rbTree
 {
     public:
         rbTree();                               // Default constructor.
-        rbTree(int initNumSpots);               // Overloaded Constructor (defines parking lot size).
+        rbTree(int initNumSpots, double rate);  // Overloaded Constructor (defines parking lot size).
         ~rbTree();                              // Destructor.
-        void carEnters(time_t in);              // Add car to RB tree.
-        float carLeaves(int numSpot);           // Delete car from RB tree and charge customer.
-        rbNode* search(int spotNum);            // Search for node in tree based on spot number.
+        void carEnters(time_t in);              // Add car to RB tree iteratively.
+        void carLeaves(int numSpot);            // Delete car from RB tree and charge customer.
         int getNumSpots();                      // Gets the number of spots in the parking lot.
         int getNumCars();                       // Gets the number of spots available.
         void printRBTree();                     // Prints the entire RB tree in order.
+        void prettyPrint();                     // Prints RB tree file-style.
+        void display(int spotNum);              // Displays info about that spot in the rbTree.
     private:
-        rbNode* carEntersHelper(rbNode* root, time_t in);// Helper for carEnters (is a BST insert function).
-        void fixTree(rbNode* root, rbNode* newCar);      // Main function used to balance the tree.
+        int assignSpot();                                // Used to randomly assign a spot to people entering the parking lot.
+        double calculatePrice(time_t in, time_t out);    // Calculates price to charge car that is leaving.
+        void fixEnter(rbNode* newCar);                   // Main function used to balance the tree.
+        void fixLeave(rbNode* node);                     // Fixes the rbTree tree when needed after a car leaves.
         void recolor(rbNode* parent, rbNode* uncle);     // Recolors based on RB tree rules.
         void rightRotate(rbNode* node);                  // Rotates a subtree (or the root) right (used for balancing).
         void leftRotate(rbNode* node);                   // Rotates a subtree (or the root) left used for balancing).
-        void printRBTreeHelper(rbNode* node);            // Helper for recursive print.
-        int assignSpot();                       // Used to randomly assign a spot to people entering the parking lot.
-        void reserveSpot();                     // Used to reserve a spot in the parking lot.
+        void rbMove(rbNode* node1, rbNode* node2);       // Moves value of node2 into node1.
+        void printRBTreeHelper(rbNode* node);            // Helper for iterative print.
+        void prettyPrintHelper(rbNode* root, string indent, bool last); // Helper for pretty print.
+        rbNode* leaveHelper(rbNode* node, int spotNum);  // Helper for carLeaves.
+        rbNode* search(rbNode* node, int spotNum);       // Search for node in tree based on spot number.
+        rbNode* minimum(rbNode* rootST);        // Finds the minimum value of a given subtree.
         rbNode* root;                           // Points to the root of the RB tree.
+        rbNode* TNULL;                          // Used for NULL Leaf Nodes.
         int numSpots;                           // Holds the number of spots in the parking lot.
         int numCars;                            // Holds the number of cars in the parking lot.
+        double rate15min;                       // Holds the amount of money charged per 15 minutes.
+        double revenue;                         // Holds total revenue made from parking lot.
         vector<bool> taken;                     // Vector that stores all taken values for easy access (0 = taken, 1 = not taken).
 };
 #endif
