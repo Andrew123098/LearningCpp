@@ -6,25 +6,31 @@
 #include <ctime>
 #include "CarAndSpot.h"
 
-// g++ -std=c++11 parkingLot.cpp CarAndSpot.cpp -o parkingLot
-// ./parkingLot
-
 using namespace std;
 
 int main(){
+                                        // INSTRUCTIONS:
+    int initNumSpots = 40;              // NUMBER OF SPOTS IN PARKING LOT
+    int initRate = 2.50;                // RATE CHARGED PER 15 MINUTES (SEE "CALCULATEPRICE" FUNCTION TO CHANGE TIME INTERVAL)
 
-    int initNumSpots = 40;
-    int initRate = 2.50;
+                                        /* COPY AND PASTE THE FOLLOWING CODE INTO YOUR TERMINAL TO RUN PROGRAM.
+                                         *      g++ -std=c++11 parkingLot.cpp CarAndSpot.cpp -o parkingLot
+                                         *      ./parkingLot 
+                                         */
+
     rbTree rb(initNumSpots, initRate);
 
     // TODO: Make interactive list to add cars to random spots.
     string dmenu = "======Main Menu=====\n"
 					          "1. Add Car\n"
 					          "2. Delete Car\n"
-                    "3. Display SpotInfo\n"
+                    "3. Display Spot Info\n"
                     "4. Print Tree\n"
                     "5. Pretty Print\n"
-                    "6. Quit\n";
+                    "6. Display All Spots\n"
+                    "7. Number of Cars in Lot\n"
+                    "8. Number of Empty Spots\n"
+                    "9. Quit\n";
 int choice;
 bool exit = false;
     
@@ -60,7 +66,14 @@ while(cin >> choice) {
         
         case 3:
         { // Search for spot and if it is taken.
-          rb.display(5);
+          int spotNum = -1;
+          cout<<"Please enter a spot number: ";
+          cin>>spotNum;
+          while(spotNum < 0 || spotNum > rb.getNumSpots()){
+            cout<<"Incorrect, please enter a spot number as an integer between 0 and "<<rb.getNumSpots()<<": ";
+            cin>>spotNum;
+          }
+          rb.display(spotNum);
           break;
         }
 
@@ -75,8 +88,27 @@ while(cin >> choice) {
           rb.prettyPrint();
           break;
         }
-            
+
         case 6:
+        { // Display all spots.
+          rb.dispAllSpots();
+          break;
+        }
+
+        case 7:
+        { // Display number of cars in the lot.
+          cout<<"Cars in lot: "<<rb.getNumCars()<<endl;
+          break;
+        }
+
+        case 8:
+        { // Display number of empty spots in the lot.
+          int emptySpots = rb.getNumSpots() - rb.getNumCars();
+          cout<<"Number of empty spots: "<<emptySpots<<endl;
+          break;
+        }
+            
+        case 9:
         { // Quit
           exit = true;
           break;

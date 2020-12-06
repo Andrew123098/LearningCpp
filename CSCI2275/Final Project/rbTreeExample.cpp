@@ -474,12 +474,12 @@ int main() {
 	bst.insert(8);
     bst.insert(9);
     bst.insert(10);
-    // bst.insert(60);
-    // bst.insert(72);
-    // bst.insert(90);
-    // bst.insert(23);
-    // bst.insert(1);
-    // bst.insert(5);
+    bst.insert(60);
+    bst.insert(72);
+    bst.insert(90);
+    bst.insert(23);
+    bst.insert(1);
+    bst.insert(5);
 	// bst.deleteNode(25);
 	bst.prettyPrint();
 	return 0;

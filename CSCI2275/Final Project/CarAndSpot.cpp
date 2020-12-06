@@ -5,30 +5,37 @@
 #include <stdlib.h>
 #include <ctime>
 #include <math.h>
+#include <stack>
 #include "CarAndSpot.h"
+
+/* Sources:
+    - https://github.com/Bibeknam/algorithmtutorprograms/blob/master/data-structures/red-black-trees/RedBlackTree.cpp
+    - https://algorithmtutor.com/Data-Structures/Tree/Red-Black-Trees/
+    - https://www.geeksforgeeks.org/inorder-tree-traversal-without-recursion/
+    - https://www.cplusplus.com/reference/ctime/ctime/
+*/
 
 using namespace std;
 
-//enum color {RED, BLACK};
-
-rbTree::rbTree(){};
-rbTree::~rbTree(){};
+rbTree::rbTree(){};   // Default constructor.
+rbTree::~rbTree(){};  // Destroyer the destructor.
 
 rbTree::rbTree(int initNumSpots, double initRate){
 /* Constructor */
     numSpots = initNumSpots;            // Define size of parking lot.
     rate15min = initRate;               // Define rate charged by parking lot per 15 minutes.
     numCars = 0;                        // Initialize number of cars in lot.
-    revenue = 0;
+    revenue = 0;                        // Initialize revenue.
      
     TNULL = new rbNode;                 // Make NIL leaf node.
-    TNULL->color = BLACK;
-    TNULL->left = NULL;
-    TNULL->right = NULL; 
+    TNULL->color = BLACK;               // NIL color is black.
+    TNULL->left = NULL;                 // NIL has no children.
+    TNULL->right = NULL;                // NIL has no children.
     root = TNULL;                       // Make root a NIL leaf node.
     
-    for(int i = 0; i < numSpots; i++){  // Initialize all values in taken vector to not taken.
-        taken.push_back(false);
+    for(int i = 0; i < numSpots; i++){  // Loop number of spots. 
+        taken.push_back(false);         // Initialize all values in taken vector to "not taken".
+        allSpots.push_back(NULL);       // Initialize all values in allSpots vector to NULL.
     }
 }
 
@@ -51,6 +58,11 @@ void rbTree::carEnters(time_t in){
     newCar->car.timeIn = in;
     newCar->spot.taken = 0;
     newCar->spot.reserved = 1;
+
+    // Support tracker values.
+    numCars++;
+    taken[newCar->spot.spotNumber] = true;
+    allSpots[newCar->spot.spotNumber] = newCar;
 
     // Make helper nodes for insertion.
     rbNode* helper1 = NULL;
@@ -170,13 +182,17 @@ rbNode* rbTree::leaveHelper(rbNode* node, int spotNum){
 /* Moves in order through all nodes in the tree to find car to delete. */
     
     // Find if node exists in the tree.
-    rbNode* toDel = search(root, spotNum);
+    rbNode* toDel = search(spotNum);
     
     // If spot has not been taken, return null.
     if(toDel == NULL){
-        cout<<"ToDel is NULL"<<endl;
         return NULL;
     }
+
+    // Support tracker values.
+    numCars--;
+    taken[toDel->spot.spotNumber] = false;
+    allSpots[toDel->spot.spotNumber] = NULL;
 
     // Make 2 helper nodes for deleting and swapping.
     rbNode* helper1 = NULL;
@@ -320,31 +336,113 @@ void rbTree::rbMove(rbNode* node1, rbNode* node2){
 double rbTree::calculatePrice(time_t in, time_t out){
 /* Calculates price to charge car that is leaving. */
     double timeInLot = difftime(out,in);  // Gives time in seconds.
-    timeInLot = round(timeInLot/(60*15)); // Gives number of 15 minute intervals spent in lot.
+    //timeInLot = round(timeInLot/(60*15)); // Gives number of 15 minute intervals spent in lot. (COMMENT OUT THIS LINE FOR TESTING IN SECONDS)
     double price = timeInLot*rate15min;   // Price to charge customer.
     return price;                         // Return price to charge.
 }
 
 
-rbNode* rbTree::search(rbNode* node, int spotNum){
-/* Search for node in tree based on spot number. */
-// This recursive search doesnt work. I either need to do an iterative inorder traversal to search, or, 
-// make a vector that holds all node values in order of spot number and then search the tree normally using the time in value from the vector.
-    if(node != TNULL){                  
-        search(node->left, spotNum);         // Get the smallest node first.
+rbNode* rbTree::search(int spotNum){
+/* Search iteratively in order for node in tree based on spot number. */
+    stack<rbNode*> stack;                      
+    rbNode* curr = root;
+
+    // Loop until the end of the tree or until the stack is empty.
+    while(curr != TNULL || !stack.empty()){
         
-        if(node->spot.spotNumber == spotNum){  // If node has same spot number as searching for ...
-            return node;                       // Return that node.
+        // Loop to bottom left of the tree.
+        while(curr != TNULL){
+            stack.push(curr);
+            curr = curr->left;
         }
 
-        search(node->right, spotNum);        // Then get the largest node.
+        // Start at bottom left of the tree.
+        curr = stack.top();
+        stack.pop();
+
+        // If the current node is the one we are looking for, return it.
+        if(curr->spot.spotNumber == spotNum)
+            return curr;
+        
+        // Go down all right branches of all left branches.
+        curr = curr->right;
     }
+    
+    // If node was not found in the tree, return null.
     return NULL;
 } 
 
 void rbTree::display(int spotNum){
 /* Displays info about that spot in the rbTree. */
+    rbNode* disp = search(spotNum);            // Find if there is a car in the spot given.
+    cout<<endl;
+    if(disp == NULL){                          // If the car did not exist in the tree ...
+        cout<<"Spot is empty."<<endl;          // Print the error message.
+        return;                                // And return.
+    } 
+    
+    // SPOT INFO
+    time_t currentTime;                            
+    time(&currentTime);                                       // Get the current time the car is leaving.
+    string sCurrentTime = ctime(&currentTime);                // Convert time_t type to string.
+    string sTimeIn = ctime(&disp->car.timeIn);                // Convert time_t type to string.
+    double currentPrice = calculatePrice(disp->car.timeIn,currentTime); // Calculate the price.
+    cout<<"Info for spot #"<<spotNum<<":"<<endl;              // Print title and spot number.
+    cout<<"Time In: "<<sTimeIn;                               // Print time car entered lot.
+    cout<<"Current Time: "<<sCurrentTime;                     // Print Current time.
+    cout<<"Current Amount Owed: $"<<currentPrice<<endl<<endl; // Print amount owed as of current time.
 
+    // PARENT INFO
+    if(disp->parent){ // Print if parent exists.
+        string spTimeIn = ctime(&disp->parent->car.timeIn);
+        double pcurrentPrice = calculatePrice(disp->parent->car.timeIn,currentTime);
+        cout<<"Parent: (Spot #"<<disp->parent->spot.spotNumber<<")"<<endl;
+        cout<<"Time In: "<<spTimeIn;
+        cout<<"Current Amount Owed: $"<<pcurrentPrice<<endl<<endl;
+    } else { // If parent doesnt exist print error message.
+        cout<<"No Parent. Spot chosen is root."<<endl<<endl;
+    }
+
+    // RIGHT CHILD INFO
+    if(disp->right != TNULL){ // Print if right child is not NIL.
+        string srTimeIn = ctime(&disp->right->car.timeIn);
+        double rcurrentPrice = calculatePrice(disp->right->car.timeIn,currentTime);
+        cout<<"Right Child: (Spot #"<<disp->right->spot.spotNumber<<")"<<endl;
+        cout<<"Time In: "<<srTimeIn;
+        cout<<"Current Amount Owed: $"<<rcurrentPrice<<endl<<endl;
+    } else { // Print error message if right child is NIL.
+        cout<<"No right child."<<endl<<endl;
+    }
+
+    // LEFT CHILD INFO
+    if(disp->left != TNULL){ // Print if left child is not NIL.
+        string slTimeIn = ctime(&disp->left->car.timeIn);
+        double lcurrentPrice = calculatePrice(disp->left->car.timeIn,currentTime);
+        cout<<"Left Child: (Spot #"<<disp->left->spot.spotNumber<<")"<<endl;
+        cout<<"Time In: "<<slTimeIn;
+        cout<<"Current Amount Owed: $"<<lcurrentPrice<<endl<<endl;
+    } else { // Print error message if left child is NIL.
+        cout<<"No left child."<<endl<<endl;
+    }
+}
+
+void rbTree::dispAllSpots(){
+/* Displays all spots in order of spot number and their time in. */
+    cout<<endl<<"All spots in this parking lot:"<<endl;
+    
+    // Loop through total number of spots in the parking lot.
+    for(int index = 0; index < numSpots; index++){
+        
+        // If the spot is taken print its time in.
+        if(allSpots[index] != NULL){
+            string st = ctime(&allSpots[index]->car.timeIn);
+            cout<<"#"<<index<<": Entered "<<st;
+        
+        // If the spot is not taken, print the spot is empty.
+        } else {
+            cout<<"#"<<index<<": Empty"<<endl;
+        }
+    }
 }
 
 int rbTree::getNumSpots(){
@@ -388,29 +486,30 @@ void rbTree::prettyPrint(){
 }
 
 void rbTree::prettyPrintHelper(rbNode* root, string indent, bool last){
-    if(root != TNULL){
-        cout<<indent;
-        if(last){
-            cout<<"R----";
-            indent += "     ";
-        } else {
-            cout<<"L----";
-            indent += "|    ";
-        }
-        string sColor;
+/* Recursive helper for pretty print. */
+    if(root != TNULL){                                // Print if node is not NIL.
+        cout<<indent;                                 // Print the indent.
+        if(last){                                     // If right child ...
+            cout<<"R----";                            // Print "R".
+            indent += "     ";                        // Increase indent.
+        } else {                                      // If left child ...
+            cout<<"L----";                            // Print "L".
+            indent += "|    ";                        // Add bar to increased indent.
+        }                                             // Then ...
+        string sColor;                                // Get the color of the node and store in string.
         if(root->color == RED){
             sColor = "RED";
         } else {
             sColor = "BLACK";
-        }
-        string st;
+        }                                             // Then ...
+        string st;                                    // Get the time in of the car and store in string.
         st = ctime(&root->car.timeIn);
         st.pop_back();
-        st.erase(0,10);
-        st.erase(st.length()-4,st.length());
-        cout<<st<<"("<<sColor<<")"<<endl;
-        prettyPrintHelper(root->left, indent, false);
-        prettyPrintHelper(root->right, indent, true);
+        st.erase(0,10);                               // Get rid of day of the week and month in string.
+        st.erase(st.length()-4,st.length());          // Get rid of year in string.
+        cout<<st<<"("<<sColor<<")"<<endl;             // Print the color in parentheses.
+        prettyPrintHelper(root->left, indent, false); // Recursivley call on left child.
+        prettyPrintHelper(root->right, indent, true); // Recursively call on right child.
     }
 }
 
@@ -422,40 +521,66 @@ void rbTree::recolor(rbNode* node,rbNode* uncle){
 
 void rbTree::rightRotate(rbNode* node){
 /* Rotates a subtree (or the root) right (used for balancing). */
-    rbNode* helper = node->left;
-    node->left = helper->right;
-    if(helper->right != TNULL){
+    
+    // Make node for helping rotate.
+    rbNode* helper = node->left;   // Helper node is left child of node.
+    node->left = helper->right;    // Make left child of node the right child of the helper node. 
+
+    // CASE: Helper's right child is NIL.
+    if(helper->right != TNULL){            
         helper->right->parent = node;
     }
-    helper->parent = node->parent;
+
+    helper->parent = node->parent; // Make helper's parent eqaul to node's parent (starting rotation).
+
+    // CASE: Node is root (parent is NULL).
     if(node->parent == NULL){
         root = helper;
+
+    // CASE: Node is right child.
     } else if(node = node->parent->right){
         node->parent->right = helper;
+
+    // CASE: Node is left child.
     } else {
         node->parent->left = helper;
     }
-    helper->right = node;
-    node->parent = helper;
+
+    // Finish rotation. (Helper is new root of subtree)
+    helper->right = node;         // Make helper's right child node.
+    node->parent = helper;        // Make node's parent the helper node.
 }
 
 void rbTree::leftRotate(rbNode* node){
 /* Rotates a subtree (or the root) left used for balancing). */
-    rbNode* helper = node->right;
-    node->right = helper->left;
+    
+    // Make node for helping rotate.
+    rbNode* helper = node->right;    // Helper node is right child of node.
+    node->right = helper->left;      // Make right child of node the left child of the helper node. 
+
+    // CASE: Helper's left child is NIL.
     if(helper->left != TNULL){
         helper->left->parent = node;
     }
-    helper->parent = node->parent;
+
+    helper->parent = node->parent;   // Make helper's parent eqaul to node's parent (starting rotation).
+
+    // CASE: Node is root (parent is NULL).
     if(node->parent == NULL){
         root = helper;
+
+    // CASE: Node is left child.
     } else if(node = node->parent->left){
         node->parent->left = helper;
+    
+    // CASE: Node is left child.
     } else {
         node->parent->right = helper;
     }
-    helper->left = node;
-    node->parent = helper;
+
+    // Finish rotation. (Helper is new root of subtree)
+    helper->left = node;             // Make helper's left child node.
+    node->parent = helper;           // Make node's parent the helper node.
 }
 
 int rbTree::assignSpot(){
@@ -466,27 +591,5 @@ int rbTree::assignSpot(){
     randomSpot = rand()%numSpots;        // Generate random spot between 0 and total number of spots -1 (0-indexed).
     }while(taken[randomSpot]);           // Check if spot is already taken.
     taken[randomSpot] = true;            // Mark the spot as taken in taken vector.
-    cout<<"Assigning "<<randomSpot<<endl;
     return randomSpot;                   // Return spot.
 }            
-
-// int main(){
-
-//     int initNumSpots = 40;
-//     rbTree rb(initNumSpots);
-
-//     time_t t;
-//     time(&t);
-//     rb.carEnters(t);
-//     time(&t);
-//     rb.carEnters(t);
-//     time(&t);
-//     rb.carEnters(t);
-//     time(&t);
-//     rb.carEnters(t);
-//     time(&t);
-//     rb.carEnters(t);
-//     time(&t);
-//     rb.carEnters(t);
-//     rb.printRBTree();
-// }
