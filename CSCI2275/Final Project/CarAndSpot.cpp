@@ -8,11 +8,6 @@
 #include <stack>
 #include "CarAndSpot.h"
 
-/* Current Bugs:
- * Print does not print in order. Probably due to not adding in order.
- * Seg fault on 1 case when car is leaf and tree is lss than 7 nodes large.
- */
-
 /* Sources:
     - https://github.com/Bibeknam/algorithmtutorprograms/blob/master/data-structures/red-black-trees/RedBlackTree.cpp
     - https://algorithmtutor.com/Data-Structures/Tree/Red-Black-Trees/
@@ -71,12 +66,12 @@ void rbTree::carEnters(time_t in){
 
     // Make helper nodes for insertion.
     rbNode* helper1 = NULL;
-    rbNode* helper2 = root;
+    rbNode* helper2 = this->root;
 
     // Find proper place to insert new node into RB tree.
     while(helper2 != TNULL){
         helper1 = helper2;
-        if(difftime(in,helper2->car.timeIn) <= 0){
+        if(difftime(in,helper2->car.timeIn) < 0){
             helper2 = helper2->left;
         } else {
             helper2 = helper2->right;
@@ -87,7 +82,7 @@ void rbTree::carEnters(time_t in){
     newCar->parent = helper1;
     if(helper1 == NULL){
         root = newCar;
-    } else if (difftime(in,helper1->car.timeIn) <= 0){
+    } else if (difftime(in,helper1->car.timeIn) < 0){
         helper1->left = newCar;
     } else {
         helper1->right = newCar;
@@ -106,6 +101,7 @@ void rbTree::carEnters(time_t in){
 
     // Otherwise, fix the tree.
     fixEnter(newCar);
+    fixLeafs(root);
 } 
 
 void rbTree::fixEnter(rbNode* newCar){     
@@ -120,7 +116,9 @@ void rbTree::fixEnter(rbNode* newCar){
 
             // CASE 1-A: Uncle is Red. (Only recoloring required)
             if(uncle->color == RED){
-                recolor(newCar,uncle);
+                newCar->parent->parent->color = RED;  
+                newCar->parent->color = BLACK;        
+                uncle->color = BLACK;              
                 newCar = newCar->parent->parent;
             
             // CASE 1-B: Uncle is black.
@@ -142,7 +140,9 @@ void rbTree::fixEnter(rbNode* newCar){
 
             // CASE 2-A: Uncle color is red. (Only recoloring required)
             if(uncle->color == RED){
-                recolor(newCar,uncle);
+                newCar->parent->parent->color = RED;  
+                newCar->parent->color = BLACK;        
+                uncle->color = BLACK;
                 newCar = newCar->parent->parent;
 
             // CASE 2-B: Uncle is black.
@@ -167,6 +167,22 @@ void rbTree::fixEnter(rbNode* newCar){
     root->color = BLACK;
 }
 
+void rbTree::fixLeafs(rbNode* node){
+/* Finds any non-NIL nodes with NULL children and makes the children NIL leaves. */
+    if (node != TNULL) {
+			fixLeafs(node->left);
+			if(node->right == NULL){
+                cout<<"Added TNULL"<<endl;
+                node->right = TNULL;
+            }
+            if(node->left == NULL){
+                cout<<"Added TNULL"<<endl;
+                node->left = TNULL;
+            }
+			fixLeafs(node->right);
+		} 
+}
+
 void rbTree::carLeaves(int numSpot){
 /* Delete car from RB tree and charge customer. */
     rbNode* leaving = leaveHelper(root, numSpot); // Delete the car from the rbTree and store its data locally.
@@ -185,7 +201,7 @@ void rbTree::carLeaves(int numSpot){
 
 rbNode* rbTree::leaveHelper(rbNode* node, int spotNum){
 /* Moves in order through all nodes in the tree to find car to delete. */
-    
+    cout<<"1"<<endl;
     // Find if node exists in the tree.
     rbNode* toDel = search(spotNum);
     
@@ -204,33 +220,40 @@ rbNode* rbTree::leaveHelper(rbNode* node, int spotNum){
     rbNode* helper2 = toDel;
 
     // Save OG color of node to delete.
-    bool toDelOGColor = toDel->color;
-
+    bool toDelOGColor = helper2->color;
+    cout<<"2"<<endl;
     // Perform proper swapping where we replace deleted node with smallest node in right tree.
     if(toDel->left == TNULL){                   // If the node to delete has a NIL left child ...
+        cout<<"3"<<endl;
         helper1 = toDel->right;                 // Set helper1 to its right child.
         rbMove(toDel,toDel->right);             // And move the tree up into place.
     } else if(toDel->right == TNULL){           // Or if the node to delete has a NIL right child ...
+        cout<<"4"<<endl;
         helper1 = toDel->left;                  // Set helper1 to its left child.
         rbMove(toDel,toDel->left);              // And move the tree up into place.
     } else {                                    // Otherwise, if neither left or right child is NIL ...
+        cout<<"5"<<endl;
         helper2 = minimum(toDel->right);        // Set helper2 to the minimum node in the right subtree.
         toDelOGColor = helper2->color;          // Set the OG color to the color of the minimum node.
         helper1 = helper2->right;               // Set helper1 to be helper2's right child.
+        cout<<"6"<<endl;
         if(helper2->parent == toDel){           // If helper2 is the child of the node to delete ...
+            cout<<"7"<<endl;
             helper1->parent = helper2;          // **This might not make sense. Set helper1's parent to be helper2.
         } else {                                // Otherwise, if helper2 (the minimum node) is not a child of the node to delete ...
+            cout<<"8"<<endl;
             rbMove(helper2,helper2->right);     // Swap the minimum node with its right child.
             helper2->right = toDel->right;      // Make the minimum node's right child the right child of the node to delete.
             helper2->right->parent = helper2;   // And set the parent node of the right child of the minimum node.
         }                                       // Then ..
-
+        cout<<"9"<<endl;
         rbMove(toDel,helper2);                  // Make the node to delete equal to helper2 (the minimum node).
         helper2->left = toDel->left;            // Set the left child of the new node to be the left child of the old node.
         helper2->left->parent = helper2;        // Set the parent node of the left child of the previous node to the new node (the minimum node).
         helper2->color = toDel->color;          // Set the color of the new node to the color of the old node.
     }
     if(toDelOGColor == BLACK){                  // If the old color was black ...
+        cout<<"10"<<endl;
         fixLeave(helper1);                      // Fix the tree.
     }
     return toDel;                               // Return the node to delete.
@@ -238,38 +261,47 @@ rbNode* rbTree::leaveHelper(rbNode* node, int spotNum){
 
 void rbTree::fixLeave(rbNode* node){   
 /* Fixes the tree to make sure it fllows the rules of an RB Tree. Takes in the Node that replaced the deleted node. */           
+    cout<<"11"<<endl;
     rbNode* helper;
 
     // Run while the node is not the root and the color is BLACK.
     while(node != root && node->color == BLACK){
-        
+        cout<<"Repeat"<<endl;
         // CASE 1: Node is left child.
         if(node == node->parent->left){
+            cout<<"12"<<endl;
             helper = node->parent->right; // Sibling node.
-            
+            cout<<"12.5"<<endl;
             // CASE 1-A: Sibling node is RED.
             if(helper->color == RED){
+                cout<<"13"<<endl;
                 helper->color = BLACK;
                 node->parent->color = RED;
+                cout<<"13.25"<<endl;
                 leftRotate(node->parent);
+                cout<<"13.5"<<endl;
                 helper = node->parent->right;
+                cout<<"13.75"<<endl;
             }
-            
+            cout<<"13.85"<<endl;
             // CASE 1-B: Sibling node has 2 black children.
             if(helper->left->color == BLACK && helper->right->color == BLACK){
+                cout<<"14"<<endl;
                 helper->color == RED;
                 node = node->parent;
-
+            cout<<"14.5"<<endl;
             // CASE 1-C: Sibling node has a red child.
             } else {
-
+                cout<<"15"<<endl;
                 // CASE 1-C.1: Sibling node has a red left child.
                 if(helper->right->color == BLACK){
+                    cout<<"16"<<endl;
                     helper->left->color = BLACK;
                     helper->color = RED;
                     rightRotate(helper);
                     helper = node->parent->right;
                 }
+                cout<<"17"<<endl;
                 // CASE 1-C: Sibling node has a red child.
                 helper->color = node->parent->color;
                 node->parent->color = BLACK;
@@ -277,45 +309,52 @@ void rbTree::fixLeave(rbNode* node){
                 leftRotate(node->parent);
                 node = root;
             }
-
+            cout<<"17.5"<<endl;
         // CASE 2: Node is right child.
         } else {
+            cout<<"18"<<endl;
             helper = node->parent->left; // Sibling node.
 
             // CASE 2-A: Sibling node is red.
             if(helper->color == RED){
+                cout<<"19"<<endl;
                 helper->color = BLACK;
                 node->parent->color = RED;
                 rightRotate(node->parent);
                 helper = node->parent->left;
             }
-
+            cout<<"20"<<endl;
             // CASE 2-B: Sibling node has 2 black children.
             if(helper->right->color == BLACK && helper->left->color == BLACK){
+                cout<<"21"<<endl;
                 helper->color = RED;
                 node = node->parent;
 
             // CASE 2-C: Sibling node has a red child.
             } else {
-
+                cout<<"22"<<endl;
                 // CASE 2-C.1: Sibling node has a red right child.
                 if(helper->left->color == BLACK){
+                    cout<<"23"<<endl;
                     helper->right->color = BLACK;
                     helper->color = RED;
                     leftRotate(helper);
                     helper = node->parent->left;
                 }
-                
+                cout<<"24"<<endl;
                 // CASE 2-C: Sibling node has a red child.
                 helper->color = node->parent->color;
                 node->parent->color = BLACK;
                 helper->left->color = BLACK;
                 rightRotate(node->parent);
                 node = root;
+                cout<<"25"<<endl;
             }
         }
     }
+    cout<<"25.5"<<endl;
     node->color = BLACK; // Make sure the replacement node is black.
+    cout<<"26"<<endl;
 }
 
 rbNode* rbTree::minimum(rbNode* rootST){
@@ -598,3 +637,45 @@ int rbTree::assignSpot(){
     taken[randomSpot] = true;            // Mark the spot as taken in taken vector.
     return randomSpot;                   // Return spot.
 }            
+
+
+//  int main(){
+
+//     int initNumSpots = 10;
+//     int initRate = 2.50;
+//     rbTree rb(initNumSpots,initRate);
+
+//     time_t t;
+//     time(&t);
+//     rb.carEnters(t);
+//     time(&t);
+//     rb.carEnters(t);
+//     time(&t);
+//     rb.carEnters(t);
+//     time(&t);
+//     rb.carEnters(t);
+//     time(&t);
+//     rb.carEnters(t);
+//     time(&t);
+//     rb.carEnters(t);
+//     time(&t);
+//     rb.carEnters(t);
+//     time(&t);
+//     rb.carEnters(t);
+//     time(&t);
+//     rb.carEnters(t);
+//     time(&t);
+//     rb.carEnters(t);
+//     time(&t);
+//     rb.carEnters(t);
+//     rb.carLeaves(9);
+//     rb.carLeaves(8);
+//     rb.carLeaves(7);
+//     rb.carLeaves(6);
+//     rb.carLeaves(5);
+//     rb.carLeaves(4);
+//     rb.carLeaves(3);
+//     rb.carLeaves(2);
+//     rb.carLeaves(1);
+//     rb.carLeaves(0);
+//  }

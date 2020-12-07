@@ -482,5 +482,6 @@ int main() {
     bst.insert(5);
 	// bst.deleteNode(25);
 	bst.prettyPrint();
+	bst.inorder();
 	return 0;
 }

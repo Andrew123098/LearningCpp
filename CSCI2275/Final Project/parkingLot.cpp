@@ -10,7 +10,7 @@ using namespace std;
 
 int main(){
                                         // INSTRUCTIONS:
-    int initNumSpots = 40;              // NUMBER OF SPOTS IN PARKING LOT
+    int initNumSpots = 10;              // NUMBER OF SPOTS IN PARKING LOT
     int initRate = 2.50;                // RATE CHARGED PER 15 MINUTES (SEE "CALCULATEPRICE" FUNCTION TO CHANGE TIME INTERVAL)
 
                                         /* COPY AND PASTE THE FOLLOWING CODE INTO YOUR TERMINAL TO RUN PROGRAM.

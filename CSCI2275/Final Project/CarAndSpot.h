@@ -81,12 +81,13 @@ class rbTree
         void prettyPrint();                              // Prints RB tree file-style.
         void display(int spotNum);                       // Displays info about that spot in the rbTree.
         void dispAllSpots();                             // Displays all spots in order of spot number and their time in.
-        
+
     private:
         int assignSpot();                                // Used to randomly assign a spot to people entering the parking lot.
         double calculatePrice(time_t in, time_t out);    // Calculates price to charge car that is leaving.
         void fixEnter(rbNode* newCar);                   // Main function used to balance the tree.
         void fixLeave(rbNode* node);                     // Fixes the rbTree tree when needed after a car leaves.
+        void fixLeafs(rbNode* node);                                 // Finds any non-NIL nodes with NULL children and makes the children NIL leaves.
         void recolor(rbNode* parent, rbNode* uncle);     // Recolors based on RB tree rules.
         void rightRotate(rbNode* node);                  // Rotates a subtree (or the root) right (used for balancing).
         void leftRotate(rbNode* node);                   // Rotates a subtree (or the root) left used for balancing).
