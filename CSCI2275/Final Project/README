@@ -46,6 +46,3 @@ Jared Jewell
 OPEN ISSUES/BUGS:
 - Print does not print in order. Probably due to not adding cars in order.
 - Seg fault on 1 case when car is leaf node and tree is less than 7 nodes large.
-
-
-
