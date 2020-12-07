@@ -15,13 +15,13 @@ to do with parking garages (but that is all I can say about it). This code will 
 jumping off point for that project and built upon in the future. 
 
 HOW TO RUN:
-Step 1: Fork repository.
-Step 2: Download repository to local computer.
-Step 3: Open local repository in VS Code or IDE of your choice.
-Step 4: Open terminal at the local repository. (Make sure repository has parkingLot.cpp, CarAndSpot.cpp and CarAndSpot.h)
-Step 5: Run the following command in your terminal to compile the program. - (Assuming mingw or gcc compiler)
+Step 1: Download repository to local computer using the green "Code" -> "Download ZIP" buttons in the top right.
+Step 2: Unzip folder on local computer into a local repository.
+Step 2: Open local repository in VS Code or IDE of your choice.
+Step 3: Open terminal at the local repository. (Make sure repository has parkingLot.cpp, CarAndSpot.cpp and CarAndSpot.h)
+Step 4: Run the following command in your terminal to compile the program. - (Assuming mingw or gcc compiler)
   g++ -std=c++11 parkingLot.cpp CarAndSpot.cpp -o parkingLot
-Step 6: Run the following command in your terminal to run the program.
+Step 5: Run the following command in your terminal to run the program.
   ./parkingLot 
 
 DEPENDENCIES:
