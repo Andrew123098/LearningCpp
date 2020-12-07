@@ -1,39 +1,51 @@
-THIS IS THE README FOR MY FINAL PROJECT FOR CSCI2275
+PARKING GARAGE SIMULATION
 
-Purpose: Create an efficient parking lot system for personal venture.
+Author: Andrew Brown
+Teacher: Dr. Rhonda Hoenigman
+Class: Programming and Data Structures 
+Code: CSCI 2275
+Semester: Fall 2020
 
-Data Structures:
- - Red-Black Tree
- - Priority Queue
+PROJECT SUMMARY:
+This project simulates software used to track cars coming in and out of a parking garage. 
+All of the cars are stored in a red-black tree for the most efficient storage, and calculations 
+of price charged to a car when it leaves are done automatically based on a realtime clock. 
+I decided to do this project because I will be working on a start up idea with my peers having
+to do with parking garages (but that is all I can say about it). This code will be used as a 
+jumping off point for that project and built upon in the future. 
 
-Structures:
- - cns                             // Structure containing car information and parking spot information.
-   - spot                          // Structure containing information about ach spot the car is in.
-     - int spotNumber              // Contains the number of the parking ParkingSpot their in (randomly generated).
-     - bool reserved               // Tells whether the spot is reserved or not (People w/ reserved spots will need a pass in their window and will have a yellow light instead of read or green).
-     - bool taken                  // Tells whether the spot is taken using sensors over each parking spot (Green light indicates open and red light indicates taken).
-   - car                           // Structure containing information about the car.
-     - int timeIn                  // Holds the realtime the car entered the parking lot (may need to be of type chrono using chrono.h).
-     - int timeOut                 // Set only when the car leaves and used to calculate price to charge.
-   
-   
-   - string color                  // Used for rebalancing the tree.
-   - cns* left                     // Stores left child in tree.
-   - cns* right                    // Stores right child in tree.
-   - cns* parent                   // Stores parent in tree.
+HOW TO RUN:
+Step 1: Fork repository.
+Step 2: Download repository to local computer.
+Step 3: Open local repository in VS Code or IDE of your choice.
+Step 4: Open terminal at the local repository. (Make sure repository has parkingLot.cpp, CarAndSpot.cpp and CarAndSpot.h)
+Step 5: Run the following command in your terminal to compile the program. - (Assuming mingw or gcc compiler)
+  g++ -std=c++11 parkingLot.cpp CarAndSpot.cpp -o parkingLot
+Step 6: Run the following command in your terminal to run the program.
+  ./parkingLot 
 
-Members: 
- - void carEnters(cns e)           // Add to the RB tree.
- - cns* carLeaves(cns l)                // Remove from the RB tree.
- - void recolor(cns* root)         // Balance the RB tree.
- - void rightRotate(cns* rootST)   // Called by recolor to rebalance the tree at a certain subtree root.
- - void leftRotate(cns* rootST)    // Called by recolor to rebalance the tree at a certain subtree root.
- - cns* search()                   // Searches for specific spot in the tree using timeIn.
- - void assignSpot()               // Randomly assign a spot to the car that enters (checks takenand reseved statuses).
- - bool reserveSpot()
+DEPENDENCIES:
+This program has no dependencies that should require additional downloads.
+All libraires included in the program should come preinstalled with your
+basic installation of the C/C++ Extension in VS Code. If you do not have this extension,
+you can either search for "C/C++" using the VS Code Extensions seach tool or download it from:
+https://github.com/microsoft/vscode-cpptools
 
+SYSTEM REQUIREMENTS:
+Windows 10
 
+TEAM MEMBERS:
+Andrew Brown
 
- 
+CONTRIBUTORS:
+Dr. Rhonda Hoenigman
+Seok Song
+Ryan Dalton
+Jared Jewell
+
+OPEN ISSUES/BUGS:
+- Print does not print in order. Probably due to not adding cars in order.
+- Seg fault on 1 case when car is leaf node and tree is less than 7 nodes large.
+
 
 
