@@ -45,5 +45,4 @@ Jared Jewell
 
 OPEN ISSUES/BUGS:
 - Print does not print in order. Probably due to not adding cars in order.
-- Seg fault on case 1-B on line 293.
 - Random spot assignment seemingly not so random.

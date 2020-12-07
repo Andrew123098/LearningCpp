@@ -462,6 +462,9 @@ public:
 
 };
 
+// g++ -std=c++11 rbTreeExample.cpp -o rbTreeExample
+// ./rbTreeExample
+
 int main() {
 	RBTree bst;
 	bst.insert(1);
@@ -474,13 +477,16 @@ int main() {
 	bst.insert(8);
     bst.insert(9);
     bst.insert(10);
-    bst.insert(60);
-    bst.insert(72);
-    bst.insert(90);
-    bst.insert(23);
-    bst.insert(1);
-    bst.insert(5);
-	// bst.deleteNode(25);
+	bst.deleteNode(10);
+	bst.deleteNode(9);
+	bst.deleteNode(8);
+	bst.deleteNode(7);
+	bst.deleteNode(6);
+	bst.deleteNode(5);
+	bst.deleteNode(4);
+	bst.deleteNode(3);
+	bst.deleteNode(2);
+	bst.deleteNode(1);
 	bst.prettyPrint();
 	bst.inorder();
 	return 0;
