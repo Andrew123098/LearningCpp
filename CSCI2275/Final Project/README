@@ -17,12 +17,8 @@ jumping off point for that project and built upon in the future.
 HOW TO RUN:
 Step 1: Download repository to local computer using the green "Code" -> "Download ZIP" buttons in the top right.
 Step 2: Unzip folder on local computer into a local repository.
-Step 2: Open local repository in VS Code or IDE of your choice.
-Step 3: Open terminal at the local repository. (Make sure repository has parkingLot.cpp, CarAndSpot.cpp and CarAndSpot.h)
-Step 4: Run the following command in your terminal to compile the program. - (Assuming mingw or gcc compiler)
-  g++ -std=c++11 parkingLot.cpp CarAndSpot.cpp -o parkingLot
-Step 5: Run the following command in your terminal to run the program.
-  ./parkingLot 
+Step 3: Open the local repository in file explorer.
+Step 4: Click on parkingLot.exe to run the application.
 
 DEPENDENCIES:
 This program has no dependencies that should require additional downloads.
