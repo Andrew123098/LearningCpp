@@ -30,7 +30,8 @@ int main(){
                     "6. Display All Spots\n"
                     "7. Number of Cars in Lot\n"
                     "8. Number of Empty Spots\n"
-                    "9. Quit\n";
+                    "9. Total Revenue\n"
+                    "10. Quit\n";
 int choice;
 bool exit = false;
     
@@ -107,8 +108,14 @@ while(cin >> choice) {
           cout<<"Number of empty spots: "<<emptySpots<<endl;
           break;
         }
-            
+
         case 9:
+        { // Display total revenue the parking lot has made.
+          cout<<"Total Revenue: $"<<rb.getRevenue()<<endl;
+          break;
+        }
+            
+        case 10:
         { // Quit
           exit = true;
           break;

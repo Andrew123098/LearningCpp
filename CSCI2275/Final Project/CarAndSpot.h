@@ -75,6 +75,7 @@ class rbTree
         
         int getNumSpots();                               // Gets the number of spots in the parking lot.
         int getNumCars();                                // Gets the number of spots available.
+        double getRevenue();                             // Gets the total revenue the parking lot has made.
         void carEnters(time_t in);                       // Add car to RB tree iteratively.
         void carLeaves(int numSpot);                     // Delete car from RB tree and charge customer.
         void printRBTree();                              // Prints the entire RB tree in order.

@@ -463,7 +463,12 @@ int rbTree::getNumSpots(){
 int rbTree::getNumCars(){
 /* Gets the number of cars in the parking lot. */
     return numCars;
-}     
+}
+
+double rbTree::getRevenue(){
+/* Gets the total revenue the parking lot has made. */
+    return revenue;
+}
 
 void rbTree::printRBTree(){
 /* Prints the entire RB tree in order. */
@@ -545,10 +550,10 @@ void rbTree::rightRotate(rbNode* node){
 
     // CASE: Node is root (parent is NULL).
     if(node->parent == NULL){
-        root = helper;
+        this->root = helper;
 
     // CASE: Node is right child.
-    } else if(node = node->parent->right){
+    } else if(node == node->parent->right){
         node->parent->right = helper;
 
     // CASE: Node is left child.
@@ -577,10 +582,10 @@ void rbTree::leftRotate(rbNode* node){
 
     // CASE: Node is root (parent is NULL).
     if(node->parent == NULL){
-        root = helper;
+        this->root = helper;
 
     // CASE: Node is left child.
-    } else if(node = node->parent->left){
+    } else if(node == node->parent->left){
         node->parent->left = helper;
     
     // CASE: Node is left child.
