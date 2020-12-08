@@ -10,13 +10,25 @@ using namespace std;
 
 int main(){
                                         // INSTRUCTIONS:
-    int initNumSpots = 20;              // NUMBER OF SPOTS IN PARKING LOT
+    int initNumSpots;                   // NUMBER OF SPOTS IN PARKING LOT
+    int minSpots = 3;                   // MIN # OF SPOTS ALLOWED
+    int maxSpots = 1000;                // MAX # OF SPOTS ALLOWED
     int initRate = 2.50;                // RATE CHARGED PER 15 MINUTES (SEE "CALCULATEPRICE" FUNCTION TO CHANGE TIME INTERVAL)
 
-                                        /* COPY AND PASTE THE FOLLOWING CODE INTO YOUR TERMINAL TO RUN PROGRAM.
-                                         *      g++ -std=c++11 parkingLot.cpp CarAndSpot.cpp -o parkingLot
-                                         *      ./parkingLot 
-                                         */
+    cout<<"Welcome to my Parking Lot Simulation."<<endl<<"This program uses a Red-Black Tree to sort and organize cars in a parking lot."<<endl;
+
+    cout<<"Please enter the number of spots in the parking lot: ";
+    cin>>initNumSpots;
+    while(initNumSpots < minSpots || initNumSpots > maxSpots){
+      if(initNumSpots < minSpots){
+        cout<<"Number of spots too small."<<endl<<"Please enter a number of spots as an integer between"<<minSpots<<" and "<<maxSpots<<": ";
+      } else if(initNumSpots > maxSpots){
+        cout<<"Number of spots too large."<<endl<<"Please enter a number of spots as an integer between"<<minSpots<<" and "<<maxSpots<<": ";
+      } else {
+        cout<<"Please enter a number of spots as an integer between"<<minSpots<<" and "<<maxSpots<<": ";
+      }
+      cin>>initNumSpots;
+    } 
 
     rbTree rb(initNumSpots, initRate);
 
