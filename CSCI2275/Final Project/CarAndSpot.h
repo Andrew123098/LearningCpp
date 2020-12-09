@@ -82,7 +82,7 @@ class rbTree
         void prettyPrint();                              // Prints RB tree file-style.
         void display(int spotNum);                       // Displays info about that spot in the rbTree.
         void dispAllSpots();                             // Displays all spots in order of spot number and their time in.
-
+        
     private:
         int assignSpot();                                // Used to randomly assign a spot to people entering the parking lot.
         double calculatePrice(time_t in, time_t out);    // Calculates price to charge car that is leaving.

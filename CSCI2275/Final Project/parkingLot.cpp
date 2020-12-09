@@ -8,29 +8,22 @@
 
 using namespace std;
 
+int forceInt(string input, int max, int min);
+
 int main(){
                                         // INSTRUCTIONS:
     int initNumSpots;                   // NUMBER OF SPOTS IN PARKING LOT
     int minSpots = 3;                   // MIN # OF SPOTS ALLOWED
     int maxSpots = 1000;                // MAX # OF SPOTS ALLOWED
-    int initRate = 2.50;                // RATE CHARGED PER 15 MINUTES (SEE "CALCULATEPRICE" FUNCTION TO CHANGE TIME INTERVAL)
+    int initRate = 2.50;                // RATE CHARGED PER 15 MINUTES (SEE "CALCULATEPRICE" FUNCTION TO CHANGE TIME INTERVAL)            
 
+    string sInitNumSpots;   
     cout<<"Welcome to my Parking Lot Simulation."<<endl<<"This program uses a Red-Black Tree to sort and organize cars in a parking lot."<<endl;
-
     cout<<"Please enter the number of spots in the parking lot: ";
-    cin>>initNumSpots;
-    while(initNumSpots < minSpots || initNumSpots > maxSpots || !cin){
-      cin.clear();
-      cin.ignore();
-      if(initNumSpots < minSpots){
-        cout<<"Number of spots too small."<<endl<<"Please enter a number of spots as an integer between "<<minSpots<<" and "<<maxSpots<<": ";
-      } else if(initNumSpots > maxSpots){
-        cout<<"Number of spots too large."<<endl<<"Please enter a number of spots as an integer between "<<minSpots<<" and "<<maxSpots<<": ";
-      } else {
-        cout<<"Please enter a number of spots as an integer between "<<minSpots<<" and "<<maxSpots<<": ";
-      }
-      cin>>initNumSpots;
-    } 
+    cin>>sInitNumSpots;
+
+    // Force input as an integer in proper range.
+    initNumSpots = forceInt(sInitNumSpots,maxSpots,minSpots);
 
     rbTree rb(initNumSpots, initRate);
 
@@ -47,6 +40,7 @@ int main(){
                     "9. Total Revenue\n"
                     "10. Quit\n";
 int choice;
+string sChoice;
 bool exit = false;
 
 int maxMenu = 10;
@@ -54,17 +48,15 @@ int minMenu = 1;
     
 cout << dmenu << endl;
     
-while(cin >> choice) {
+while(cin >> sChoice) {
         
     // Flush the newlines and other characters.
     cin.clear();
     cin.ignore();
 
-      if(choice < minMenu || choice > maxMenu || !cin){
-        cout<<"Please enter a number of spots as an integer between "<<minMenu<<" and "<<maxMenu<<": ";
-        cin>>choice;
-      }
-    
+    // Force user entry as integer.
+    choice = forceInt(sChoice, maxMenu, minMenu);
+
     switch (choice) {
         case 1:
         { // Add a car to the parking lot.
@@ -76,26 +68,22 @@ while(cin >> choice) {
             
         case 2:
         { // Car leaves the parking lot.
-          int spotNum = -1;
-          cout<<"Please enter your spot number: ";
-          cin>>spotNum;
-          while(spotNum < 0 || spotNum > rb.getNumSpots()){
-            cout<<"Incorrect, please enter you spot number as an integer between 0 and "<<rb.getNumSpots()<<": ";
-            cin>>spotNum;
-          }
+          int spotNum;
+          string sSpotNum;
+          cout<<"Please enter a spot number: ";
+          cin>>sSpotNum;
+          spotNum = forceInt(sSpotNum,rb.getNumSpots(),0);
           rb.carLeaves(spotNum);
           break;
         }
         
         case 3:
         { // Search for spot and if it is taken.
-          int spotNum = -1;
+          int spotNum;
+          string sSpotNum;
           cout<<"Please enter a spot number: ";
-          cin>>spotNum;
-          while(spotNum < 0 || spotNum > rb.getNumSpots()){
-            cout<<"Incorrect, please enter a spot number as an integer between 0 and "<<rb.getNumSpots()<<": ";
-            cin>>spotNum;
-          }
+          cin>>sSpotNum;
+          spotNum = forceInt(sSpotNum,rb.getNumSpots(),0);
           rb.display(spotNum);
           break;
         }
@@ -151,3 +139,20 @@ while(cin >> choice) {
   }
     return 0;
 }
+
+int forceInt(string input, int max, int min){
+/* Used in main to force user to input an integer. */
+   int output;
+   // This do-while loop is meant to force the user to enter an integer between the max and min values.
+    do{
+      try{ // Try converting input string to integer.
+        output = stoi(input);
+        if(output < min || output > max) throw 1;
+      }
+      catch(...){ // If number entered is not in b/w max and min values or not an int try again.
+        cout<<"Please enter a number as an integer between "<<min<<" and "<<max<<": ";
+        cin>>input;
+      }
+    }while(output < min || output > max);
+    return output;
+}    
