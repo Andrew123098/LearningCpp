@@ -19,13 +19,15 @@ int main(){
 
     cout<<"Please enter the number of spots in the parking lot: ";
     cin>>initNumSpots;
-    while(initNumSpots < minSpots || initNumSpots > maxSpots){
+    while(initNumSpots < minSpots || initNumSpots > maxSpots || !cin){
+      cin.clear();
+      cin.ignore();
       if(initNumSpots < minSpots){
-        cout<<"Number of spots too small."<<endl<<"Please enter a number of spots as an integer between"<<minSpots<<" and "<<maxSpots<<": ";
+        cout<<"Number of spots too small."<<endl<<"Please enter a number of spots as an integer between "<<minSpots<<" and "<<maxSpots<<": ";
       } else if(initNumSpots > maxSpots){
-        cout<<"Number of spots too large."<<endl<<"Please enter a number of spots as an integer between"<<minSpots<<" and "<<maxSpots<<": ";
+        cout<<"Number of spots too large."<<endl<<"Please enter a number of spots as an integer between "<<minSpots<<" and "<<maxSpots<<": ";
       } else {
-        cout<<"Please enter a number of spots as an integer between"<<minSpots<<" and "<<maxSpots<<": ";
+        cout<<"Please enter a number of spots as an integer between "<<minSpots<<" and "<<maxSpots<<": ";
       }
       cin>>initNumSpots;
     } 
@@ -34,8 +36,8 @@ int main(){
 
     // TODO: Make interactive list to add cars to random spots.
     string dmenu = "======Main Menu=====\n"
-					          "1. Add Car\n"
-					          "2. Delete Car\n"
+					          "1. Car Enters\n"
+					          "2. Car Leaves\n"
                     "3. Display Spot Info\n"
                     "4. Print Tree\n"
                     "5. Pretty Print\n"
@@ -46,6 +48,9 @@ int main(){
                     "10. Quit\n";
 int choice;
 bool exit = false;
+
+int maxMenu = 10;
+int minMenu = 1;
     
 cout << dmenu << endl;
     
@@ -54,6 +59,11 @@ while(cin >> choice) {
     // Flush the newlines and other characters.
     cin.clear();
     cin.ignore();
+
+      if(choice < minMenu || choice > maxMenu || !cin){
+        cout<<"Please enter a number of spots as an integer between "<<minMenu<<" and "<<maxMenu<<": ";
+        cin>>choice;
+      }
     
     switch (choice) {
         case 1:

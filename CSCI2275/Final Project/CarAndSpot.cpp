@@ -235,7 +235,7 @@ rbNode* rbTree::leaveHelper(rbNode* node, int spotNum){
 }
 
 void rbTree::fixLeave(rbNode* node){   
-/* Fixes the tree to make sure it fllows the rules of an RB Tree. Takes in the Node that replaced the deleted node. */           
+/* Fixes the tree to make sure it follows the rules of an RB Tree. Takes in the Node that replaced the deleted node. */           
     rbNode* helper;
 
     // Run while the node is not the root and the color is BLACK.
