@@ -64,6 +64,20 @@
 // y->leftChild = x
 // x->parent = y
 
+// rightRotate(x)
+// y = x->LeftChild
+// x->LeftChild = y->RightChild
+// if(y->RightChild != nullnode)
+//     y->RightChild->parent = x;
+//     y->parent = x->parent
+// if(x->parent == nullnode)
+//     root = y
+// else
+//     x->parent->LeftChild = y
+
+// y->rightChild = x
+// x->parent = y
+
 
 // Insering a node into a red-black tree:
 // - same as inserting into a BST w/ a few additions.
